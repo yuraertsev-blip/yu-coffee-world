@@ -2,6 +2,7 @@ import * as T from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {VRMLoaderPlugin} from '@pixiv/three-vrm';
 import {assetUrl} from './asset-url.js';
+import {solveArm} from './character-rig.js';
 import {dressBarista} from './barista-outfits.js';
 export const BARISTAS=[
  {id:'flowers',label:'Цветочный ободок',height:1.94,hair:'#926a49',top:'#efe4d2',eyes:'#6c9188'},
@@ -33,19 +34,16 @@ export function createBaristas(scene,{initial=0,onReady=()=>{},onError=()=>{},lo
   rotate(vrm,'spine',Math.sin(time*1.8)*.006,0,Math.sin(time*1.8)*.008);rotate(vrm,'neck',-.025,Math.sin(time*.48)*.025,0);rotate(vrm,'head',.015,Math.sin(time*.48)*.025,Math.sin(time*.7)*.012);
   for(const [prefix,side] of [['left',1],['right',-1]]){
    const swing=moving?Math.sin(time*7+side*Math.PI/2):0;
-   rotate(vrm,prefix+'UpperArm',moving?swing*.14:-.12,-side*.2,-side*(moving?1.28:1.05));
-   rotate(vrm,prefix+'LowerArm',0,-side*(moving?.13:.65),-side*.07);
-   rotate(vrm,prefix+'Hand',0,0,side*.08);
+   rotate(vrm,prefix+'UpperArm',moving?swing*.10:0,-side*.18,-side*1.25,1);
+   rotate(vrm,prefix+'LowerArm',0,-side*.22,0,1);
+   rotate(vrm,prefix+'Hand',0,0,0,1);
    rotate(vrm,prefix+'UpperLeg',swing*.22,0,0);rotate(vrm,prefix+'LowerLeg',Math.max(0,-swing)*.30,0,0);
    for(const finger of ['Index','Middle','Ring','Little'])for(const segment of ['Proximal','Intermediate','Distal'])rotate(vrm,prefix+finger+segment,0,-side*(task==='wipe'?.06:.24),0,.3);
   }
   root.updateMatrixWorld(true);
  }
  function reach(side,worldTarget){const vrm=entries[active].vrm;if(!vrm)return worldTarget.clone();const prefix=side>0?'left':'right';const a=vrm.humanoid.getNormalizedBoneNode(prefix+'UpperArm'),b=vrm.humanoid.getNormalizedBoneNode(prefix+'LowerArm'),c=vrm.humanoid.getNormalizedBoneNode(prefix+'Hand');root.updateMatrixWorld(true);
-  const ap=a.getWorldPosition(new T.Vector3()),bp=b.getWorldPosition(new T.Vector3()),cp=c.getWorldPosition(new T.Vector3()),l1=ap.distanceTo(bp),l2=bp.distanceTo(cp),v=worldTarget.clone().sub(ap),d=T.MathUtils.clamp(v.length(),.05,l1+l2-.008),direction=v.normalize();
-  const bend=new T.Vector3(side*.25,-.8,.25);bend.addScaledVector(direction,-bend.dot(direction)).normalize();const along=(l1*l1-l2*l2+d*d)/(2*d),height=Math.sqrt(Math.max(0,l1*l1-along*along)),elbow=ap.clone().addScaledVector(direction,along).addScaledVector(bend,height);
-  function aim(bone,child,target){const start=bone.getWorldPosition(new T.Vector3()),localDirection=target.clone().sub(start).normalize().applyQuaternion(bone.parent.getWorldQuaternion(new T.Quaternion()).invert());bone.quaternion.setFromUnitVectors(child.position.clone().normalize(),localDirection);bone.updateWorldMatrix(false,true);}
-  aim(a,b,elbow);aim(b,c,ap.clone().addScaledVector(direction,d));return c.getWorldPosition(new T.Vector3());
+  return solveArm(root,a,b,c,worldTarget,side);
  }
  function face(direction,dt){const diff=direction-root.rotation.y;root.rotation.y+=Math.atan2(Math.sin(diff),Math.cos(diff))*Math.min(1,dt*4);}
  function update(){const vrm=entries[active].vrm;if(vrm){vrm.springBoneManager?.reset();vrm.update(delta);}}

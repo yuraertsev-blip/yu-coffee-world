@@ -93,3 +93,17 @@ export function addPhotoFineDetails(cafe,rear,m,p){
  // Cable and dry twig next to the tall souvenir unit.
  for(let i=0;i<8;i++){const z=1.99+Math.sin(i*.4)*.035,y=1.55+i*.15;rod(cafe,[1.82,y,z],[1.82,y+.15,1.99+Math.sin((i+1)*.4)*.035],.004,m.standard('#81755e'));if(i%2)rod(cafe,[1.82,y,z],[1.81,y+.18,z+.11],.0025,m.standard('#81755e'));}
 }
+
+// Fine close-up baking detail stays attached when each pastry is served.
+export function addPastryDetails(scene){
+ const pastries=[];scene.traverse(o=>{if(o.userData.counterAction==='muffin')pastries.push(o);});
+ pastries.forEach((g,index)=>{
+  const base=g.getObjectByName('individual-muffin'),top=g.getObjectByName('rounded-muffin-top');
+  const paper=new T.MeshStandardMaterial({color:index%3?'#ac794e':'#81935e',roughness:.95});
+  const ridges=new T.InstancedMesh(new T.CylinderGeometry(.0014,.0011,.058,5),paper,32);ridges.name='pleated-paper-wrapper';
+  const matrix=new T.Matrix4(),rotation=new T.Quaternion(),unit=new T.Vector3(1,1,1);
+  for(let i=0;i<32;i++){const a=i/32*Math.PI*2;rotation.setFromAxisAngle(new T.Vector3(Math.sin(a),0,-Math.cos(a)),.27);matrix.compose(new T.Vector3(base.position.x+Math.cos(a)*.049,base.position.y,base.position.z+Math.sin(a)*.049),rotation,unit);ridges.setMatrixAt(i,matrix);}g.add(ridges);
+  const crumbs=new T.InstancedMesh(new T.SphereGeometry(.0017,6,4),new T.MeshStandardMaterial({color:'#ead09a',roughness:1}),28);crumbs.name='baked-crust-crumbs';
+  for(let i=0;i<28;i++){const a=i*2.399,r=.01+(i%7)*.005;matrix.compose(new T.Vector3(top.position.x+Math.cos(a)*r,top.position.y+.035*Math.sqrt(1-r*r/.0032),top.position.z+Math.sin(a)*r),rotation,unit);crumbs.setMatrixAt(i,matrix);}g.add(crumbs);
+ });
+}

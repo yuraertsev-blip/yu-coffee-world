@@ -3,7 +3,7 @@ import {createMaterials} from './materials.js';
 import {propFactory} from './props.js';
 import {addCounterProducts,addShelfProducts} from './products.js';
 import {addBarEquipment} from './bar.js';
-import {addPhotoFineDetails} from './fine-details.js';
+import {addPhotoFineDetails,addPastryDetails} from './fine-details.js';
 import {addInteriorDetails} from './interior-details.js';
 import {createSeating} from './seating.js';
 import {createVegetation} from './vegetation.js';
@@ -138,6 +138,7 @@ export function makeWorld(scene){
 
  addInteriorDetails(cafe,m,p);
  addPhotoFineDetails(cafe,rear,m,p);
+ addPastryDetails(scene);
  Object.values(groups).forEach(batchStatic);
  return {colliders,roofGroup,lamps,groups,ceiling,materials:m};
 }
