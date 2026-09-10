@@ -24,8 +24,8 @@ export function addInteriorDetails(parent,m,p){
  cyl(parent,'glass-cake-stand-foot',-.10,top+.018,-1.64,.13,.15,.028,glass,40);
  cyl(parent,'glass-cake-stand-stem',-.10,top+.095,-1.64,.03,.05,.15,glass,24);
  cyl(parent,'glass-cake-stand-platter',-.10,top+.18,-1.64,.26,.26,.02,glass,48);
- for(let i=0;i<7;i++){const a=i*2.4,r=i===0?0:.16,x=-.10+Math.cos(a)*r,z=-1.64+Math.sin(a)*r;const pastry=cyl(parent,'individual-muffin',x,top+.215,z,.057,.04,.06,m.standard(i%3?'#b37d47':'#91a064'),18);sphere(parent,'rounded-muffin-top',x,top+.247,z,.056,m.standard(i%3?'#c49961':'#a4ad79'));}
- const dome=new T.Mesh(new T.SphereGeometry(.27,40,20,0,Math.PI*2,0,Math.PI/2),glass);dome.name='glass-pastry-cloche';dome.position.set(-.10,top+.185,-1.64);dome.scale.y=.74;parent.add(dome);cyl(parent,'glass-cloche-knob',-.10,top+.415,-1.64,.025,.038,.054,glass);
+ for(let i=0;i<7;i++){const a=i*2.4,r=i===0?0:.16,x=-.10+Math.cos(a)*r,z=-1.64+Math.sin(a)*r;const holder=new T.Group();holder.name='interactive-muffin-'+i;holder.userData.counterAction='muffin';holder.userData.dynamic=true;parent.add(holder);const pastry=cyl(holder,'individual-muffin',x,top+.215,z,.057,.04,.06,m.standard(i%3?'#b37d47':'#91a064'),18);sphere(holder,'rounded-muffin-top',x,top+.247,z,.056,m.standard(i%3?'#c49961':'#a4ad79'));}
+ const cloche=new T.Group();cloche.name='interactive-cloche';cloche.userData.dynamic=true;cloche.userData.counterAction='cloche';parent.add(cloche);const dome=new T.Mesh(new T.SphereGeometry(.27,40,20,0,Math.PI*2,0,Math.PI/2),glass);dome.name='glass-pastry-cloche';dome.position.set(-.10,top+.185,-1.64);dome.scale.y=.74;cloche.add(dome);cyl(cloche,'glass-cloche-knob',-.10,top+.415,-1.64,.025,.038,.054,glass);
  box(parent,'card-terminal',.61,top+.055,-1.73,.14,.06,.22,m.black,.014);const screen=box(parent,'blue-terminal-screen',.61,top+.09,-1.76,.115,.009,.115,m.standard('#668da7',{emissive:'#33547a',emissiveIntensity:.25}));screen.rotation.x=.16;
  for(let i=0;i<3;i++){const disc=cyl(parent,'round-counter-mosaic',-.08+i*.16,top+.005,-1.18,.073,.073,.008,m.metal,32);const face=new T.Mesh(new T.CircleGeometry(.07,32),m.photoMaterial(i===1?'gift-mosaic-town':'gift-mosaic-round'));face.rotation.x=-Math.PI/2;face.position.set(disc.position.x,top+.01,-1.18);parent.add(face);}
  const caddy=new T.Group();caddy.name='black-counter-organizer';caddy.position.set(.97,top,-1.48);parent.add(caddy);
@@ -41,7 +41,7 @@ export function addInteriorDetails(parent,m,p){
  const body=sphere(cat,'tip-cat-body',0,.115,0,.075,orange);body.scale.y=1.35;sphere(cat,'tip-cat-head',0,.255,0,.086,orange);
  for(const x of [-.062,.062]){cyl(cat,'cat-pointed-ear',x,.334,0,0,.025,.065,orange,10);sphere(cat,'tip-cat-paw',x,.03,.023,.03,orange);}
  const mouth=sphere(cat,'black-tip-opening',0,.247,.072,.055,m.black);mouth.scale.set(1,.63,.18);p.text(cat,'ЧАЕВЫЕ',0,.235,.084,.08,.025,{size:130});
- for(const [x,color] of [[.44,'#70c52f'],[.65,'#168cce']]){cyl(parent,'service-bell-black-base',x,top+.023,-1.14,.061,.066,.032,m.black);const b=sphere(parent,'coloured-service-bell',x,top+.047,-1.14,.053,m.standard(color,{roughness:.28}));b.scale.y=.40;}
+ for(const [x,color] of [[.44,'#70c52f'],[.65,'#168cce']]){const bell=new T.Group();bell.name='interactive-bell-'+x;bell.userData.dynamic=true;bell.userData.counterAction='bell';bell.userData.voice=x===.44?0:1;parent.add(bell);cyl(bell,'service-bell-black-base',x,top+.023,-1.14,.061,.066,.032,m.black);const b=sphere(bell,'coloured-service-bell',x,top+.047,-1.14,.053,m.standard(color,{roughness:.28}));b.scale.y=.40;}
  // Leaning white panel and low black cabinet on the right, visible in IMG_3995.
  box(parent,'right-low-cabinet',1.69,.42,-2.10,.38,.80,.65,m.black);
  const panel=box(parent,'leaning-white-display-panel',1.64,1.13,-2.10,.035,.67,.62,m.white);panel.rotation.z=.1;

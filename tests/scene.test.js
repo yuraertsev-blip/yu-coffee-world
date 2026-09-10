@@ -38,3 +38,18 @@ test('photo layout keeps sink and espresso left, exactly two fridges right',()=>
  for(const f of fridges){const p=f.getWorldPosition(new T.Vector3());assert.ok(p.x>0);assert.equal(free(p.x,p.z),false);}
  assert.ok(free(.45,-3.05));assert.ok(free(-.35,-3.60));assert.ok(free(0,-2.35));assert.ok(free(0,-.45));
 });
+
+import {createCounterService} from '../src/counter-interaction.js';
+test('counter objects survive batching; serving lifts lid, moves one muffin and releases barista',()=>{
+ const root=new T.Group();root.position.set(-.14,.025,-2.2);scene.add(root);let override=null;
+ const coffee={get state(){return {busy:false,...override};},setOverride(s){override=s;}};
+ const characters={root,ready:true,collider:{},animate(){},face(){},reach(){}};
+ const service=createCounterService(scene,characters,coffee),lid=service.cloche.position.clone(),m=service.muffins[0],start=m.position.clone();
+ assert.equal(service.muffins.length,7);assert.equal(service.objects.filter(o=>o.userData.counterAction==='bell').length,2);
+ assert.ok(m.getObjectByName('rounded-muffin-top'));assert.ok(m.getObjectByName('muffin-dark-berry'));
+ service.request(m);assert.equal(service.busy,true);assert.equal(coffee.state.busy,true);
+ for(let i=0;i<20;i++)service.update(.05);assert.ok(service.cloche.position.y>lid.y+.2);
+ service.request(m);for(let i=0;i<100;i++)service.update(.05);
+ assert.equal(service.servedCount,1);assert.equal(service.busy,false);assert.equal(coffee.state.busy,false);assert.ok(m.position.distanceTo(start)>.2);assert.ok(service.cloche.position.distanceTo(lid)<1e-8);
+ override={busy:true};service.request(service.muffins[1]);assert.equal(service.busy,false);override=null;
+});

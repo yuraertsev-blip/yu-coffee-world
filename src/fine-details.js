@@ -84,7 +84,7 @@ export function addPhotoFineDetails(cafe,rear,m,p){
  cyl(figure,'red-coin-dish',-.067,.18,.11,.048,.043,.009,m.standard('#a7372b',{roughness:.36}),32);cyl(figure,'small-coin',-.073,.187,.11,.014,.014,.002,steel,20);
  // More irregular muffin tops and dark filling, rather than smooth pastry spheres.
  const tops=[];cafe.traverse(o=>{if(o.name==='rounded-muffin-top')tops.push(o);});
- tops.forEach((o,i)=>{const a=o.geometry.attributes.position;for(let j=0;j<a.count;j++){const x=a.getX(j),y=a.getY(j),z=a.getZ(j),r=1+.055*Math.sin(x*183+z*89)*Math.cos(y*210);a.setXYZ(j,x*r,y*r*.70,z*r);}o.geometry.computeVertexNormals();for(let k=0;k<5;k++){const angle=k*2.4+i,x=o.position.x+Math.cos(angle)*.024,z=o.position.z+Math.sin(angle)*.024;const filling=sphere(cafe,'muffin-dark-berry',x,o.position.y+.023,z,.008,m.standard(i%3?'#39271e':'#6a7750'));filling.scale.y=.5;}});
+ tops.forEach((o,i)=>{const a=o.geometry.attributes.position;for(let j=0;j<a.count;j++){const x=a.getX(j),y=a.getY(j),z=a.getZ(j),r=1+.055*Math.sin(x*183+z*89)*Math.cos(y*210);a.setXYZ(j,x*r,y*r*.70,z*r);}o.geometry.computeVertexNormals();for(let k=0;k<5;k++){const angle=k*2.4+i,x=o.position.x+Math.cos(angle)*.024,z=o.position.z+Math.sin(angle)*.024;const filling=sphere(o.parent,'muffin-dark-berry',x,o.position.y+.023,z,.008,m.standard(i%3?'#39271e':'#6a7750'));filling.scale.y=.5;}});
  plane(cafe,'cartagena-game-box-face',1.12,.355,1.374,.24,.046,m.photoMaterial('table-game-cartagena'));
  // The window mobile has two suspension rings, not floating individual strings.
  const mobile=cafe.getObjectByName('white-birds-and-crescent-mobile');

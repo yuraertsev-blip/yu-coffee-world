@@ -26,7 +26,7 @@ export function installBaristaInteraction({canvas,camera,scene,characters,servic
  document.querySelector('#inspect-coffee').onclick=()=>{hide();notice.hidden=true;onInspect();};
  document.querySelector('#dismiss-coffee').onclick=()=>notice.hidden=true;
  function update(){
-  const state=service.state;status.textContent=state.label;order.disabled=state.busy;order.textContent=state.busy?'Капучино готовится…':'заказать кофе';
+  const state=service.state;status.textContent=state.label;order.disabled=state.busy;order.textContent=state.activity==='pastry'?'Подаю кекс…':state.busy?'Капучино готовится…':'заказать кофе';
   document.querySelector('#coffee-progress').hidden=!state.busy;
   document.querySelector('#coffee-progress').textContent=state.busy?state.label+'…':'';
   if(state.completed>lastCompleted){lastCompleted=state.completed;notice.querySelector('span').textContent=`Латте-арт «${state.design?.name||'Розетта'}» · ${state.design?.id+1||1}/36`;notice.hidden=false;}

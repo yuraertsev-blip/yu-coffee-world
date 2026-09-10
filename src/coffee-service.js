@@ -25,8 +25,9 @@ export function createCoffeeService(scene,characters){
  const espresso=mesh(group,new T.CylinderGeometry(.0025,.0025,.11,8),new T.MeshBasicMaterial({color:'#54250e'}),-1.16,1.34,-2.25);espresso.visible=false;
  const cloth=mesh(group,new T.BoxGeometry(.14,.009,.09),new T.MeshStandardMaterial({color:'#b9c5b1'}));
  const steam=[];for(let i=0;i<8;i++){const s=mesh(group,new T.SphereGeometry(.012,8,6),new T.MeshBasicMaterial({color:'#fff6e9',transparent:true,opacity:.18,depthWrite:false}));steam.push(s);}
- let time=0,completed=0;const served=new T.Vector3(.05,1.15,-1.29),machine=new T.Vector3(-1.16,1.175,-2.25),pourPosition=new T.Vector3(-.12,1.20,-1.90);
+ let override=null;let time=0,completed=0;const served=new T.Vector3(.05,1.15,-1.29),machine=new T.Vector3(-1.16,1.175,-2.25),pourPosition=new T.Vector3(-.12,1.20,-1.90);
  function update(dt,camera){
+  if(override){pitcher.visible=cloth.visible=stream.visible=espresso.visible=false;steam.forEach(p=>p.visible=false);return override;}
   time+=dt;const s=timeline.update(dt),root=characters.root;
   const dx=s.target[0]-root.position.x,dz=s.target[1]-root.position.z,distance=Math.hypot(dx,dz),step=Math.min(distance,dt*.65);
   // Keep personal space if the visitor enters the work aisle.
@@ -59,5 +60,5 @@ export function createCoffeeService(scene,characters){
   if(stream.visible){const start=pitcher.localToWorld(new T.Vector3(-.055,.13,0)),end=cup.position.clone().add(new T.Vector3(Math.sin(time*8)*.016,.133,0)),delta=end.clone().sub(start);stream.position.copy(start).add(end).multiplyScalar(.5);stream.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),delta.clone().normalize());stream.scale.y=delta.length()/.18;}
   return s;
  }
- return {update,order(){if(!timeline.order())return false;design=deck.next();if(artCanvas){drawLatteArt(artCanvas.getContext('2d'),design.id);artTexture.needsUpdate=true;}return true;},get state(){return {...timeline.state,design};},cup};
+ return {update,setOverride(state){override=state;},order(){if(override||!timeline.order())return false;design=deck.next();if(artCanvas){drawLatteArt(artCanvas.getContext('2d'),design.id);artTexture.needsUpdate=true;}return true;},get state(){return {...timeline.state,...override,design};},cup};
 }
