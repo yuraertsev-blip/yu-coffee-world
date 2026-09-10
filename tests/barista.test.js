@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createWorkTimeline,ORDER_STEPS} from '../src/barista-work.js';
+import {nextBaristaIndex} from '../src/baristas.js';
+import {isTap} from '../src/barista-interaction.js';
+test('baristas cycle through all three portraits and distinguish taps from drags',()=>{assert.equal(nextBaristaIndex(0),1);assert.equal(nextBaristaIndex(1),2);assert.equal(nextBaristaIndex(2),0);assert.ok(isTap({x:20,y:20},{clientX:22,clientY:22}));assert.ok(!isTap({x:20,y:20},{clientX:45,clientY:20}));});
+test('idle work continuously visits four distinct stations',()=>{const t=createWorkTimeline(),seen=new Set();for(let i=0;i<8;i++){seen.add(t.state.id);t.update(5);}assert.equal(seen.size,4);assert.equal(t.state.busy,false);assert.equal(t.state.completed,0);});
+test('coffee immediately interrupts idle, rejects duplicates and completes exactly once',()=>{const t=createWorkTimeline();t.update(7);assert.equal(t.state.id,'rinse');assert.equal(t.order(),true);assert.equal(t.state.id,'approach');assert.equal(t.order(),false);for(const step of ORDER_STEPS){assert.equal(t.state.id,step.id);t.update(step.duration);}assert.equal(t.state.completed,1);assert.equal(t.state.busy,false);t.update(80);assert.equal(t.state.completed,1);assert.equal(t.order(),true);t.update(14);assert.equal(t.state.completed,2);});
+test('frame chunking and portrait changes do not lose or duplicate orders',()=>{const a=createWorkTimeline(),b=createWorkTimeline();a.order();b.order();for(let i=0;i<200;i++){a.update(.05);nextBaristaIndex(i%3);}b.update(10);assert.equal(a.state.id,b.state.id);assert.ok(Math.abs(a.state.progress-b.state.progress)<1e-10);a.update(4.01);assert.equal(a.state.completed,1);});
+
+import * as T from 'three';
+import {createBaristas} from '../src/baristas.js';
+import {createCoffeeService} from '../src/coffee-service.js';
+test('3D service delivers a visible cup and resumes work after a full order',()=>{const scene=new T.Scene(),people=createBaristas(scene),service=createCoffeeService(scene,people),camera=new T.PerspectiveCamera();camera.position.set(0,1.68,2);assert.equal(service.order(),true);for(let i=0;i<281;i++)service.update(.05,camera);assert.equal(service.state.completed,1);assert.equal(service.state.busy,false);assert.ok(service.cup.visible);assert.ok(service.cup.position.distanceTo(new T.Vector3(.05,1.15,-1.29))<1e-6);assert.ok(people.root.position.toArray().every(Number.isFinite));});
+import {LATTE_DESIGNS,createLatteDeck} from '../src/latte-art.js';
+test('36 different latte designs are shuffled without repeats, including across bag boundaries',()=>{assert.equal(LATTE_DESIGNS.length,36);assert.equal(new Set(LATTE_DESIGNS).size,36);let seed=123;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};const deck=createLatteDeck(random);let previous=-1;for(let round=0;round<4;round++){const seen=new Set();for(let i=0;i<36;i++){const d=deck.next();assert.notEqual(d.id,previous);assert.equal(d.name,LATTE_DESIGNS[d.id]);seen.add(d.id);previous=d.id;}assert.equal(seen.size,36);}});
+import {readFileSync} from 'node:fs';
+import {assetUrl} from '../src/asset-url.js';
+test('published avatar contains real skinning, facial expressions and redistribution rights',()=>{const b=readFileSync(new URL('../public/models/barista-base.vrm',import.meta.url));const g=JSON.parse(b.subarray(20,20+b.readUInt32LE(12)));assert.ok(g.skins[0].joints.length>50);assert.ok(g.meshes.length>=3);assert.ok(g.extensions.VRMC_vrm.expressions.preset.blink);assert.equal(g.extensions.VRMC_vrm.meta.allowRedistribution,true);assert.equal(g.extensions.VRMC_vrm.meta.modification,'allowModificationRedistribution');for(const mesh of g.meshes)for(const p of mesh.primitives){assert.ok(p.attributes.JOINTS_0!==undefined);assert.ok(p.attributes.WEIGHTS_0!==undefined);}});
+test('assets resolve at both local root and GitHub project path',()=>{assert.equal(assetUrl('/models/barista-base.vrm','/'),'/models/barista-base.vrm');assert.equal(assetUrl('models/barista-base.vrm','/yu-coffee-world/'),'/yu-coffee-world/models/barista-base.vrm');});
