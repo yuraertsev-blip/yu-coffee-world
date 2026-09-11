@@ -1,0 +1,17 @@
+import {deck,shuffle} from './common.js';
+export class Durak{
+ constructor(count,random=Math.random){this.hands=Array.from({length:count+1},()=>[]);this.draw=shuffle(deck(6),random);this.trump=this.draw[0].suit;this.trumpCard=this.draw[0];for(let i=0;i<6;i++)for(const h of this.hands)if(this.draw.length)h.push(this.draw.pop());this.out=[];this.discard=[];this.table=[];this.done=false;this.taking=false;this.attacker=0;let low=15;this.hands.forEach((h,p)=>h.forEach(c=>{if(c.suit===this.trump&&c.rank<low){low=c.rank;this.attacker=p;}}));this.defender=this.next(this.attacker);this.actor=this.attacker;this.limit=Math.min(6,this.hands[this.defender].length);this.message='Подкидной дурак: атакует один игрок, затем ход по кругу.';}
+ next(p){do{p=(p+1)%this.hands.length;}while(this.out.includes(p)&&this.out.length<this.hands.length);return p;}
+ beats(c,a){return (c.suit===a.suit&&c.rank>a.rank)||(c.suit===this.trump&&a.suit!==this.trump);}
+ canAttack(c){return this.table.length<this.limit&&(!this.table.length||this.table.some(p=>p.attack.rank===c.rank||p.defense?.rank===c.rank));}
+ finish(){const taking=this.taking,def=this.defender,att=this.attacker;const cards=this.table.flatMap(p=>p.defense?[p.attack,p.defense]:[p.attack]);if(taking)this.hands[def].push(...cards);else this.discard.push(...cards);
+  const order=[];for(let i=0;i<this.hands.length;i++){const p=(att+i)%this.hands.length;if(p!==def)order.push(p);}order.push(def);for(const p of order)while(this.hands[p].length<6&&this.draw.length)this.hands[p].push(this.draw.pop());
+  if(!this.draw.length)this.hands.forEach((h,p)=>{if(!h.length&&!this.out.includes(p))this.out.push(p);});this.table=[];this.taking=false;
+  if(this.out.length>=this.hands.length-1){this.done=true;this.loser=this.hands.findIndex(h=>h.length);this.message=this.loser<0?'Ничья: все избавились от карт.':'Партия завершена.';return;}
+  this.attacker=taking?this.next(def):(this.out.includes(def)?this.next(def):def);this.defender=this.next(this.attacker);this.actor=this.attacker;this.limit=Math.min(6,this.hands[this.defender].length);this.message=taking?'Карты взяты. Ход переходит дальше.':'Бито. Новый заход.';
+ }
+ act(a){if(this.done)return false;const h=this.hands[this.actor];if(this.actor===this.attacker){if(a.type==='end'&&this.table.length&&(this.taking||this.table.every(p=>p.defense))){this.finish();return true;}if(a.type!=='play')return false;const i=h.findIndex(c=>c.id===a.id);if(i<0||!this.canAttack(h[i]))return false;this.table.push({attack:h.splice(i,1)[0],defense:null});if(!this.taking)this.actor=this.defender;this.message=this.taking?'Можно ещё подкинуть или завершить.':'Защищайтесь или возьмите карты.';return true;}
+ if(a.type==='take'){this.taking=true;this.actor=this.attacker;this.message='Защитник берёт. Можно подкинуть по рангу.';return true;}
+ if(a.type!=='play')return false;const i=h.findIndex(c=>c.id===a.id),pair=this.table[a.target];if(i<0||!pair||pair.defense||!this.beats(h[i],pair.attack))return false;pair.defense=h.splice(i,1)[0];if(this.table.every(p=>p.defense))this.actor=this.attacker;this.message='Карта отбита.';return true;}
+ bot(){const h=this.hands[this.actor].toSorted((a,b)=>(a.suit===this.trump)*20+a.rank-((b.suit===this.trump)*20+b.rank));if(this.actor===this.attacker){const c=h.find(c=>this.canAttack(c));return c?this.act({type:'play',id:c.id}):this.act({type:'end'});}const target=this.table.findIndex(p=>!p.defense),c=h.find(c=>this.beats(c,this.table[target].attack));return c?this.act({type:'play',id:c.id,target}):this.act({type:'take'});}
+}

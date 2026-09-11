@@ -1,4 +1,5 @@
 import './style.css';
+import {installGameTable} from './game-table.js';
 import {installCounterInteraction} from './counter-interaction.js';
 import {LATTE_DESIGNS,drawLatteArt} from './latte-art.js';
 import {createBaristas} from './baristas.js';
@@ -31,6 +32,7 @@ const characters=createBaristas(scene,{initial:savedBarista,onReady:()=>{if(char
 const service=createCoffeeService(scene,characters);
 const interaction=installBaristaInteraction({canvas,camera,scene,characters,service,world,keys,isWalking:()=>walking,raycaster:new T.Raycaster(),vector:new T.Vector2(),onInspect:()=>{enter(.05,-.65,true);active('bar');pitch=-.72;}});
 const counter=installCounterInteraction({canvas,camera,world:{...world,scene},characters,coffee:service,isWalking:()=>walking,isMenuOpen:()=>interaction.opened});
+const gameRoom=installGameTable({scene,canvas,camera,world,keys,interaction,isWalking:()=>walking});
 const composer=new EffectComposer(renderer);const ao=new SSAOPass(scene,camera,innerWidth,innerHeight,12);ao.kernelRadius=.35;ao.minDistance=.001;ao.maxDistance=.045;composer.addPass(new RenderPass(scene,camera));composer.addPass(ao);composer.addPass(new OutputPass());
 const hint=$('#hint');
 function active(id){document.querySelector('#bar-views').hidden=id!=='bar';document.querySelectorAll('.views button').forEach(b=>b.classList.toggle('active',b.id===id));}
@@ -45,7 +47,7 @@ let clickStart=null;canvas.addEventListener('pointerdown',e=>{clickStart={x:e.cl
 const touchMap={forward:'KeyW',back:'KeyS',left:'KeyA',right:'KeyD'};document.querySelectorAll('[data-move]').forEach(b=>{b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(touchMap[b.dataset.move]);};b.onpointerup=b.onpointercancel=()=>keys.delete(touchMap[b.dataset.move]);});
 function canGo(x,z){return canOccupy(x,z,world.colliders,SITE.bounds);}
 function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);}addEventListener('resize',resize);resize();overview();
-const clock=new T.Clock();renderer.setAnimationLoop(()=>{const dt=Math.min(clock.getDelta(),.05);if(walking){camera.rotation.set(pitch,yaw,0,'YXZ');if(!document.querySelector('dialog[open]')&&!interaction.opened){const f=Number(keys.has('KeyW')||keys.has('ArrowUp'))-Number(keys.has('KeyS')||keys.has('ArrowDown'));const r=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'));const norm=Math.hypot(f,r)||1;const speed=dt*(keys.has('ShiftLeft')?4:2.4)/norm;const dx=(-Math.sin(yaw)*f+Math.cos(yaw)*r)*speed,dz=(-Math.cos(yaw)*f-Math.sin(yaw)*r)*speed;if(canGo(camera.position.x+dx,camera.position.z))camera.position.x+=dx;if(canGo(camera.position.x,camera.position.z+dz))camera.position.z+=dz;$('#location').textContent=Math.abs(camera.position.x)<SITE.cafe.width/2&&camera.position.z<5&&camera.position.z>-4.6?'Внутри кофейни':'У «Ю кофе»';}}else orbit.update();counter.update(dt);service.update(dt,camera);characters.update(camera);camera.updateMatrixWorld();interaction.update();if(innerWidth>700)composer.render();else renderer.render(scene,camera);});
+const clock=new T.Clock();renderer.setAnimationLoop(()=>{const dt=Math.min(clock.getDelta(),.05);if(gameRoom.opened)return;if(walking){camera.rotation.set(pitch,yaw,0,'YXZ');if(!document.querySelector('dialog[open]')&&!interaction.opened){const f=Number(keys.has('KeyW')||keys.has('ArrowUp'))-Number(keys.has('KeyS')||keys.has('ArrowDown'));const r=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'));const norm=Math.hypot(f,r)||1;const speed=dt*(keys.has('ShiftLeft')?4:2.4)/norm;const dx=(-Math.sin(yaw)*f+Math.cos(yaw)*r)*speed,dz=(-Math.cos(yaw)*f-Math.sin(yaw)*r)*speed;if(canGo(camera.position.x+dx,camera.position.z))camera.position.x+=dx;if(canGo(camera.position.x,camera.position.z+dz))camera.position.z+=dz;$('#location').textContent=Math.abs(camera.position.x)<SITE.cafe.width/2&&camera.position.z<5&&camera.position.z>-4.6?'Внутри кофейни':'У «Ю кофе»';}}else orbit.update();counter.update(dt);service.update(dt,camera);characters.update(camera);camera.updateMatrixWorld();interaction.update();if(innerWidth>700)composer.render();else renderer.render(scene,camera);});
 
 $('#references').onclick=()=>{keys.clear();document.exitPointerLock?.();$('#reference-dialog').showModal();};$('#close-reference').onclick=()=>$('#reference-dialog').close();
 // Keep enlarged reference panels in the café viewer, including the in-app browser.
