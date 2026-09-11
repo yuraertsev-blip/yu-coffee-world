@@ -1,0 +1,10 @@
+export class OnlineClient extends EventTarget{
+ constructor(base){super();this.base=base.replace(/\/$/,'');this.state=null;this.connected=false;this.pending=false;this.token=null;this.timer=null;try{this.token=sessionStorage.getItem('yu-online-session');}catch{}}
+ emit(type,detail){this.dispatchEvent(new CustomEvent(type,{detail}));}
+ async request(path,body){const r=await fetch(this.base+'/api/'+path,{method:body?'POST':'GET',headers:{...(body?{'Content-Type':'application/json'}:{}),...(this.token?{Authorization:'Bearer '+this.token}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(12000)});const data=await r.json();if(!r.ok){if(r.status===401){this.token=null;try{sessionStorage.removeItem('yu-online-session');}catch{}}throw new Error(data.error||'Сервер недоступен.');}return data;}
+ accept(state){this.state=state;this.connected=true;this.emit('state',state);this.emit('connection',true);}
+ async poll(){if(this.pending)return this.schedule();this.pending=true;try{if(!this.token){let name='';try{name=localStorage.getItem('yu-guest-name')||'';}catch{}const joined=await this.request('join',{name});this.token=joined.token;try{sessionStorage.setItem('yu-online-session',this.token);}catch{}}this.accept(await this.request('state'));}catch{this.connected=false;this.emit('connection',false);}finally{this.pending=false;this.schedule();}}
+ schedule(){clearTimeout(this.timer);this.timer=setTimeout(()=>this.poll(),this.connected?(this.state?.match?.gameId==='croissant'?450:1000):4000);}
+ async command(action){if(this.commandBusy)return;this.commandBusy=true;while(this.pending)await new Promise(r=>setTimeout(r,30));if(!this.connected){this.commandBusy=false;this.emit('notice','Подключаемся. Попробуйте ещё раз через секунду.');return;}this.pending=true;clearTimeout(this.timer);try{this.accept(await this.request('command',action));}catch(e){this.emit('notice',e.message);}finally{this.pending=false;this.commandBusy=false;this.schedule();}}
+ start(){this.poll();}
+}

@@ -1,3 +1,4 @@
+import {installOnline} from './online/ui.js';
 import './style.css';
 import {installGameTable} from './game-table.js';
 import {installCounterInteraction} from './counter-interaction.js';
@@ -33,6 +34,7 @@ const service=createCoffeeService(scene,characters);
 const interaction=installBaristaInteraction({canvas,camera,scene,characters,service,world,keys,isWalking:()=>walking,raycaster:new T.Raycaster(),vector:new T.Vector2(),onInspect:()=>{enter(.05,-.65,true);active('bar');pitch=-.72;}});
 const counter=installCounterInteraction({canvas,camera,world:{...world,scene},characters,coffee:service,isWalking:()=>walking,isMenuOpen:()=>interaction.opened});
 const gameRoom=installGameTable({scene,canvas,camera,world,keys,interaction,isWalking:()=>walking});
+installOnline({scene,canvas,camera,world,keys,interaction,gameRoom});
 const composer=new EffectComposer(renderer);const ao=new SSAOPass(scene,camera,innerWidth,innerHeight,12);ao.kernelRadius=.35;ao.minDistance=.001;ao.maxDistance=.045;composer.addPass(new RenderPass(scene,camera));composer.addPass(ao);composer.addPass(new OutputPass());
 const hint=$('#hint');
 function active(id){document.querySelector('#bar-views').hidden=id!=='bar';document.querySelectorAll('.views button').forEach(b=>b.classList.toggle('active',b.id===id));}

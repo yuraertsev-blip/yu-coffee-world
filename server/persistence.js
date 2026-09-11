@@ -1,0 +1,4 @@
+import {CafeRoom} from './room.js';
+import {hydrateGame} from '../src/online/protocol.js';
+export function saveRoom(room){return JSON.parse(JSON.stringify({sessions:[...room.sessions],invites:[...room.invites],matches:[...room.matches],limits:room.limits||[]},(key,value)=>value instanceof Map?{mapEntries:[...value]}:value));}
+export function loadRoom(data,options){const room=new CafeRoom(options);if(!data)return room;room.sessions=new Map(data.sessions);room.invites=new Map(data.invites);room.matches=new Map(data.matches);room.limits=data.limits||[];for(const m of room.matches.values()){m.game=hydrateGame(m.gameId,m.game);m.game.random=Math.random;if(m.game.positions?.mapEntries)m.game.positions=new Map(m.game.positions.mapEntries);if(m.arcade)m.arcade=m.arcade.map(g=>Object.assign(hydrateGame('croissant',g),{random:Math.random}));}return room;}

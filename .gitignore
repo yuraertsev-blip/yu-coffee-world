@@ -6,3 +6,6 @@ dist/
 .swift-cache/
 .video-tools/
 .pip-cache/
+
+.env*
+.vercel/
