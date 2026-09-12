@@ -10,6 +10,7 @@ export class CafeRoom{
  sweep(){const now=this.now();for(const [token,p] of this.sessions)if(now-p.seen>TTL){if(p.match)this.cancelMatch(p.match,`${p.name} отключился. Партия завершена.`);this.sessions.delete(token);}for(const [id,i] of this.invites)if(i.expires<=now||!this.byId(i.from)||!this.byId(i.to)){this.invites.delete(id);const p=this.byId(i.from);if(p)p.notice='Приглашение истекло или гость вышел.';}for(const m of this.matches.values())if(m.gameId==='croissant'&&!m.game.done)this.tickArcade(m,now);}
  tickArcade(m,now){const dt=Math.min(30,(now-m.ticked)/1000);m.ticked=now;for(const g of m.arcade)g.tick(dt);m.game=m.arcade[0];m.revision++;}
  snapshot(m,seat){const g=m.gameId==='croissant'?m.arcade[seat]:m.game;const state=JSON.parse(JSON.stringify(g,(key,value)=>['random','positions'].includes(key)?undefined:value));
+  state.message=state.message.replace(/ Ваш ход\./g,'');
   if(g.draw)state.draw=Array(g.draw.length).fill(null);
   if(g.hands)state.hands=g.hands.map((h,p)=>p===seat||(m.gameId==='poker'&&g.done&&g.live.length>1&&!g.folded.includes(p))?h:Array(h.length).fill(null));
   if(m.gameId==='croissant'){state.scores=m.arcade.map(g=>g.scores[0]);state.actor=seat;if(g.done){const max=Math.max(...state.scores),w=state.scores.flatMap((s,i)=>s===max?[i]:[]);state.winner=w.length===1?w[0]:null;}}
