@@ -53,3 +53,14 @@ test('counter objects survive batching; serving lifts lid, moves one muffin and 
  assert.equal(service.servedCount,1);assert.equal(service.busy,false);assert.equal(coffee.state.busy,false);assert.ok(m.position.distanceTo(start)>.2);assert.ok(service.cloche.position.distanceTo(lid)<1e-8);
  override={busy:true};service.request(service.muffins[1]);assert.equal(service.busy,false);override=null;
 });
+
+import {createWallDarbuka,hitWallDarbuka} from '../src/music-prop.js';
+test('wall darbuka is reachable from the aisle, but cannot be clicked through the wall',()=>{
+ const drum=createWallDarbuka(scene);scene.updateMatrixWorld(true);
+ const target=drum.getWorldPosition(new T.Vector3());
+ const shoot=origin=>new T.Raycaster(origin,target.clone().sub(origin).normalize());
+ assert.equal(hitWallDarbuka(shoot(new T.Vector3(SITE.inside.x,1.68,SITE.inside.z)),drum,Object.values(world.groups)),true);
+ assert.equal(hitWallDarbuka(shoot(new T.Vector3(3,1.68,2.65)),drum,Object.values(world.groups)),false);
+ assert.equal(hitWallDarbuka(shoot(new T.Vector3(0,1.68,10)),drum,[]),false);
+ drum.removeFromParent();
+});

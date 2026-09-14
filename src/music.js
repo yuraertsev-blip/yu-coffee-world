@@ -1,0 +1,37 @@
+import * as T from 'three';
+import {isTap} from './barista-interaction.js';
+import './music.css';
+import {createWallDarbuka,hitWallDarbuka} from './music-prop.js';
+
+import {INSTRUMENTS,createMusicAudio,getMusicPreset} from './music-audio.js';
+const CODES=['KeyA','KeyS','KeyD','KeyF','KeyG','KeyH','KeyJ','KeyK'];
+
+export function installMusic({scene,canvas,camera,world,keys,interaction}){
+ const drum=createWallDarbuka(scene),audio=createMusicAudio(),settings=new Map();let selected=null,revision=0;
+ const launcher=document.createElement('button');launcher.className='quiet';launcher.id='open-music';launcher.textContent='Музыка ♫';document.querySelector('.header-actions').prepend(launcher);
+ const dialog=document.createElement('dialog');dialog.id='music-room';dialog.setAttribute('aria-labelledby','music-title');document.body.append(dialog);
+ const open=()=>{keys.clear();interaction.hide();document.exitPointerLock?.();selected=null;render();dialog.showModal();};launcher.onclick=open;
+ const finish=()=>{revision++;audio.stop();heldKeys.clear();keys.clear();};dialog.addEventListener('close',()=>{finish();launcher.focus({preventScroll:true});});
+ const get=()=>settings.get(selected.id);
+ function render(){
+  revision++;audio.stop();heldKeys.clear();
+  dialog.innerHTML=`<div class="music-top"><span>Ю КОФЕ / МУЗЫКАЛЬНАЯ КОМНАТА</span><button data-close aria-label="Закрыть музыкальную комнату">✕</button></div><h2 id="music-title">${selected?selected.name:'Поймай свой ритм'}</h2><p class="music-intro">${selected?'Касайся площадок или играй клавишами A–K. '+(selected.type==='drone'?'Удерживай звук, чтобы тянуть дрон.':'Сочетай звуки — играй в своём темпе.'):'Выбери инструмент. Здесь можно играть, экспериментировать и просто слушать.'}</p>`;
+  dialog.querySelector('[data-close]').onclick=()=>dialog.close();
+  if(!selected){const grid=document.createElement('div');grid.className='music-instruments';INSTRUMENTS.forEach(inst=>{const b=document.createElement('button');b.innerHTML=`<span class="music-icon">${inst.icon}</span><strong>${inst.name}</strong><small>3 пресета · настройки звучания ↗</small>`;b.onclick=()=>{selected=inst;if(!settings.has(inst.id))settings.set(inst.id,{...getMusicPreset(inst.id),preset:'0'});render();dialog.querySelector('[data-back]').focus();};grid.append(b);});dialog.append(grid);return;}
+  const controls=document.createElement('div');controls.innerHTML=`<div class="music-toolbar"><button data-back>← Все инструменты</button><label>Характер звука <select aria-label="Пресет">${selected.presets.map((p,i)=>`<option value="${i}">${p}</option>`).join('')}<option value="custom">Свой звук</option></select></label></div><div class="music-pads"></div><div class="music-settings"></div><p class="music-status" role="status">Звук включится при первом нажатии. Громкость и тембр можно менять во время игры.</p>`;dialog.append(controls);
+  controls.querySelector('[data-back]').onclick=()=>{selected=null;render();dialog.querySelector('.music-instruments button').focus();};const preset=controls.querySelector('select');preset.value=get().preset;
+  preset.onchange=()=>{if(preset.value==='custom'){get().preset='custom';return;}Object.assign(get(),getMusicPreset(selected.id,+preset.value),{preset:preset.value});render();dialog.querySelector('select').focus();};
+  selected.labels.forEach((label,i)=>{const b=document.createElement('button'),inst=selected,presses=new Map();b.className=`music-pad ${inst.type}`;b.dataset.note=i;b.innerHTML=`<kbd>${CODES[i].slice(3)}</kbd><span>${label}</span>`;
+   b.onpointerdown=e=>{if(e.button!==0)return;e.preventDefault();b.focus({preventScroll:true});b.setPointerCapture(e.pointerId);const press={};presses.set(e.pointerId,press);hit(i,b).then(release=>{if(presses.get(e.pointerId)===press)press.release=release;else if(inst.type==='drone')release?.();});};
+   b.onpointerup=b.onpointercancel=b.onlostpointercapture=e=>{const press=presses.get(e.pointerId);presses.delete(e.pointerId);if(inst.type==='drone')press?.release?.();if(!presses.size)b.classList.remove('playing');};
+   b.onclick=e=>{if(e.detail===0){hit(i,b).then(release=>{if(inst.type==='drone')setTimeout(()=>{release?.();b.classList.remove('playing');},800);});}};controls.querySelector('.music-pads').append(b);});
+  for(const [key,label,min,max,step] of [['volume','Громкость',0,1,.01],['tone','Яркость',0,1,.01],['decay',selected.type==='drone'?'Послезвучие':'Длина звука',0,1,.01],['space','Эхо',0,1,.01],['tune','Строй',-12,12,1]]){const l=document.createElement('label');l.innerHTML=`<span>${label} <output>${key==='tune'?get()[key]+' пт':Math.round(get()[key]*100)+'%'}</output></span><input type="range" aria-label="${label}" min="${min}" max="${max}" step="${step}" value="${get()[key]}">`;l.querySelector('input').oninput=e=>{get()[key]=+e.target.value;audio.update(get());get().preset='custom';preset.value='custom';l.querySelector('output').textContent=key==='tune'?e.target.value+' пт':Math.round(+e.target.value*100)+'%';};controls.querySelector('.music-settings').append(l);}
+ }
+ async function hit(i,b){const version=revision,inst=selected;try{await audio.ready();if(version!==revision||!dialog.open)return;const release=audio.play(inst,i,get());b.classList.add('playing');if(inst.type!=='drone')setTimeout(()=>b.classList.remove('playing'),160);dialog.querySelector('.music-status').textContent=`${inst.name} · ${inst.labels[i]}`;return release;}catch(e){if(dialog.open)dialog.querySelector('.music-status').textContent='Не удалось включить звук: '+e.message;}}
+ const heldKeys=new Map();document.addEventListener('keydown',e=>{if(!dialog.open||!selected||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;const i=CODES.indexOf(e.code);if(i<0||i>=selected.notes.length)return;e.preventDefault();e.stopPropagation();if(e.repeat||heldKeys.has(e.code))return;const press={},inst=selected;heldKeys.set(e.code,press);hit(i,dialog.querySelector(`[data-note="${i}"]`)).then(release=>{if(heldKeys.get(e.code)===press)press.release=inst.type==='drone'?release:null;else if(inst.type==='drone')release?.();});});
+ document.addEventListener('keyup',e=>{heldKeys.get(e.code)?.release?.();heldKeys.delete(e.code);dialog.querySelector(`[data-note="${CODES.indexOf(e.code)}"]`)?.classList.remove('playing');});
+ const silence=()=>{finish();dialog.querySelectorAll('.playing').forEach(b=>b.classList.remove('playing'));};
+ addEventListener('blur',silence);document.addEventListener('visibilitychange',()=>{if(document.hidden)silence();});
+ let down=null;const ray=new T.Raycaster(),pointer=new T.Vector2();canvas.addEventListener('pointerdown',e=>down={x:e.clientX,y:e.clientY});canvas.addEventListener('click',e=>{if(dialog.open||document.querySelector('dialog[open]')||!isTap(down,e))return;const rect=canvas.getBoundingClientRect(),locked=document.pointerLockElement===canvas;pointer.set(locked?0:(e.clientX-rect.left)/rect.width*2-1,locked?0:1-(e.clientY-rect.top)/rect.height*2);ray.setFromCamera(pointer,camera);if(!hitWallDarbuka(ray,drum,Object.values(world.groups)))return;e.preventDefault();e.stopImmediatePropagation();open();},true);
+ return {get opened(){return dialog.open;}};
+}
