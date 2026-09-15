@@ -7,6 +7,7 @@ import {addPhotoFineDetails,addPastryDetails} from './fine-details.js';
 import {addInteriorDetails} from './interior-details.js';
 import {createSeating} from './seating.js';
 import {createVegetation} from './vegetation.js';
+import {createCandle,addAutumnLeaves} from './autumn.js';
 import {batchStatic} from './optimize.js';
 // Video-informed manual reconstruction. Metres, Y up; storefront faces +Z.
 // Dimensions estimated from door / floor-tile proportions, not surveyed.
@@ -19,7 +20,7 @@ export function makeWorld(scene){
  function solid(x,z,w,d){colliders.push({minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2});}
  const terrain=group('pavement-and-flowerbeds');
  box(terrain,'paved-promenade',0,-.07,10,80,.12,32,m.paving);
- box(terrain,'lawn',0,-.13,22,90,.12,16,m.standard('#63764b'));
+ box(terrain,'lawn',0,-.13,22,90,.12,16,m.standard('#8c8054'));
  // Video shows a pedestrian forecourt, not a road at the café door.
  for(const x of [-23,-11,1,13,25]){box(terrain,'raised-flowerbed',x,.06,11,10,.21,1.7,m.standard('#797c73'));box(terrain,'earth',x,.18,11,9.8,.035,1.48,m.soil);solid(x,11,10,1.7);}
  const building=group('residential-building');
@@ -64,8 +65,8 @@ export function makeWorld(scene){
  const ceiling=group('suspended-ceiling');
  box(ceiling,'ceiling',0,3.08,.2,3.8,.08,9.6,m.ceiling);
  const seam=m.standard('#adb0aa');for(let x=-1.9;x<2;x+=.6)box(ceiling,'ceiling-grid',x,3.028,.2,.018,.018,9.6,seam);for(let z=-4.6;z<5;z+=.6)box(ceiling,'ceiling-grid',0,3.027,z,3.8,.018,.018,seam);
- const led=m.standard('#ffffff',{emissive:'#ffffff',emissiveIntensity:1.4});
- for(const z of [-3.1,-.1,2.9]){box(ceiling,'LED-panel',.2,3.018,z,.575,.018,.575,led);const light=new T.PointLight('#fff4de',9,5,2);light.position.set(0,2.7,z);scene.add(light);lamps.push(light);}
+ const led=m.standard('#ffe1ac',{emissive:'#ffca81',emissiveIntensity:.65});
+ for(const z of [-3.1,-.1,2.9]){box(ceiling,'LED-panel',.2,3.018,z,.575,.018,.575,led);const light=new T.PointLight('#ffcf93',5.4,5,2);light.position.set(0,2.7,z);scene.add(light);lamps.push(light);}
  // Actual window left, single narrow entry right. All aperture geometry is open.
  box(cafe,'brick-under-window',-.97,.26,5,1.9,.52,.19,m.brick);solid(-.97,5,1.9,.19);
  plane(cafe,'front-window',-.97,1.65,5.015,1.82,2.23,m.glass);solid(-.97,5,1.9,.08);
@@ -129,10 +130,10 @@ export function makeWorld(scene){
  // Outdoor vegetation uses instanced leaves/petals instead of faceted placeholder balls.
  let seed=57;function rand(){seed=(seed*16807)%2147483647;return seed/2147483647;}
  const dummy=new T.Object3D();
- const leafGeo=v.leafGeometry;v.flowerbeds(terrain,[-23,-11,1,13,25]);
- const treeLeaves=new T.InstancedMesh(leafGeo,m.standard('#4c663d'),5000);treeLeaves.name='tree-foliage';treeLeaves.castShadow=true;let ti=0;
+ const leafGeo=v.leafGeometry.clone();leafGeo.deleteAttribute('color');addAutumnLeaves(terrain,leafGeo,v.leafBump);v.flowerbeds(terrain,[-23,-11,1,13,25]);
+ const treeLeaves=new T.InstancedMesh(leafGeo,m.standard('#ffffff',{side:T.DoubleSide,bumpMap:v.leafBump,bumpScale:.0005,roughness:.72}),5000);treeLeaves.name='tree-foliage';treeLeaves.castShadow=true;let ti=0;
  for(const [x,z] of [[-24,20],[-13,20],[0,21],[13,20],[25,21]]){cyl(terrain,'tree-trunk',x,2.3,z,.16,.28,4.6,m.standard('#696456'),12);solid(x,z,.55,.55);for(let branch=0;branch<7;branch++){const a=branch*2.4;rod(terrain,[x,2.3,z],[x+Math.cos(a)*1.7,4+branch*.23,z+Math.sin(a)*1.7],.06,m.standard('#6b6859'));}
- for(let i=0;i<900;i++){const a=rand()*Math.PI*2,r=Math.sqrt(rand())*2.75,v=(rand()-.5)*3.5;dummy.position.set(x+Math.cos(a)*r,5+v,z+Math.sin(a)*r);dummy.scale.set(.12+rand()*.18,.055,.24);dummy.rotation.set(rand()*3,rand()*6,rand()*3);dummy.updateMatrix();treeLeaves.setMatrixAt(ti,dummy.matrix);treeLeaves.setColorAt(ti++,new T.Color().setHSL(.23+rand()*.07,.22+rand()*.2,.2+rand()*.18));}}
+ for(let i=0;i<900;i++){const a=rand()*Math.PI*2,r=Math.sqrt(rand())*2.75,v=(rand()-.5)*3.5;dummy.position.set(x+Math.cos(a)*r,5+v,z+Math.sin(a)*r);dummy.scale.set(.14+rand()*.16,.24+rand()*.17,.24);dummy.rotation.set(rand()*3,rand()*6,rand()*3);dummy.updateMatrix();treeLeaves.setMatrixAt(ti,dummy.matrix);treeLeaves.setColorAt(ti++,new T.Color().setHSL(.025+rand()*.115,.55+rand()*.3,.29+rand()*.18));}}
  treeLeaves.count=ti;terrain.add(treeLeaves);
  const fence=group('street-fence');for(let x=-35;x<36;x+=2){rod(fence,[x,0,24],[x,.9,24],.035,m.white);rod(fence,[x,.84,24],[x+2,.84,24],.025,m.white);rod(fence,[x,.12,24],[x+2,.84,24],.019,m.white);rod(fence,[x,.84,24],[x+2,.12,24],.019,m.white);}
 
@@ -140,5 +141,5 @@ export function makeWorld(scene){
  addPhotoFineDetails(cafe,rear,m,p);
  addPastryDetails(scene);
  Object.values(groups).forEach(batchStatic);
- return {colliders,roofGroup,lamps,groups,ceiling,materials:m};
+ const candle=createCandle(scene);return {colliders,roofGroup,lamps,groups,ceiling,materials:m,update:dt=>candle.update(dt)};
 }

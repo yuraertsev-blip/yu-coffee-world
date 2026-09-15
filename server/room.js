@@ -1,9 +1,10 @@
+import {cleanAvatar} from '../src/guest-profiles.js';
 import {engines,cleanName} from '../src/online/protocol.js';
 
 const TTL=35000,INVITE_TTL=30000;
 export class CafeRoom{
  constructor({now=()=>Date.now(),uuid=()=>crypto.randomUUID()}={}){this.now=now;this.uuid=uuid;this.sessions=new Map();this.invites=new Map();this.matches=new Map();}
- join(name){this.sweep();if(this.sessions.size>=100)throw new Error('Зал заполнен. Попробуйте чуть позже.');const token=this.uuid()+this.uuid(),p={id:this.uuid(),name:cleanName(name),joined:this.now(),seen:this.now(),notice:'',match:null};this.sessions.set(token,p);return {token,id:p.id};}
+ join(name,avatar){this.sweep();if(this.sessions.size>=100)throw new Error('Зал заполнен. Попробуйте чуть позже.');const token=this.uuid()+this.uuid(),p={id:this.uuid(),name:cleanName(name),avatar:cleanAvatar(avatar),joined:this.now(),seen:this.now(),notice:'',match:null};this.sessions.set(token,p);return {token,id:p.id};}
  player(token){const p=this.sessions.get(token);if(!p)throw new Error('SESSION_EXPIRED');return p;}
  byId(id){return [...this.sessions.values()].find(p=>p.id===id);}
  cancelMatch(id,message){const m=this.matches.get(id);if(!m)return;for(const id of m.players){const p=this.byId(id);if(p){p.match=null;p.notice=message;}}this.matches.delete(m.id);}
@@ -16,9 +17,9 @@ export class CafeRoom{
   if(m.gameId==='croissant'){state.scores=m.arcade.map(g=>g.scores[0]);state.actor=seat;if(g.done){const max=Math.max(...state.scores),w=state.scores.flatMap((s,i)=>s===max?[i]:[]);state.winner=w.length===1?w[0]:null;}}
   return {id:m.id,gameId:m.gameId,seat,names:m.names,revision:m.revision,state};
  }
- poll(token){this.sweep();const p=this.player(token);p.seen=this.now();return {id:p.id,guests:[...this.sessions.values()].map(x=>({id:x.id,name:x.name,joined:x.joined,busy:!!x.match})),incoming:[...this.invites.values()].find(i=>i.to===p.id)||null,outgoing:[...this.invites.values()].find(i=>i.from===p.id)||null,match:p.match?this.snapshot(this.matches.get(p.match),this.matches.get(p.match).players.indexOf(p.id)):null,notice:p.notice};}
+ poll(token){this.sweep();const p=this.player(token);p.seen=this.now();return {id:p.id,guests:[...this.sessions.values()].map(x=>({id:x.id,name:x.name,avatar:cleanAvatar(x.avatar),joined:x.joined,busy:!!x.match})),incoming:[...this.invites.values()].find(i=>i.to===p.id)||null,outgoing:[...this.invites.values()].find(i=>i.from===p.id)||null,match:p.match?this.snapshot(this.matches.get(p.match),this.matches.get(p.match).players.indexOf(p.id)):null,notice:p.notice};}
  command(token,a){this.sweep();const p=this.player(token);p.seen=this.now();if(!a||typeof a!=='object')throw new Error('Некорректная команда.');
-  if(a.type==='name'){p.name=cleanName(a.name);return;}
+  if(a.type==='name'){p.name=cleanName(a.name);if(a.avatar!==undefined)p.avatar=cleanAvatar(a.avatar);return;}
   if(a.type==='ack'){p.notice='';return;}
   if(a.type==='leave'){if(p.match)this.cancelMatch(p.match,`${p.name} вышел из партии.`);return;}
   if(a.type==='cancel'){for(const [id,i] of this.invites)if(i.from===p.id)this.invites.delete(id);return;}

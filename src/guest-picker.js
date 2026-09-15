@@ -1,0 +1,4 @@
+import {GUEST_PROFILES,guestProfile} from './guest-profiles.js';
+import {assetUrl} from './asset-url.js';
+export const portraitUrl=id=>assetUrl('avatars/'+guestProfile(id).id+'.png');
+export function guestPicker(id){return `<fieldset class="avatar-picker"><legend>Выберите свой образ</legend><p class="online-muted">15 персонажей в стиле наших бариста</p>${[['women','Женские'],['men','Мужские'],['animals','Животные']].map(([group,title])=>`<div class="avatar-category"><h3>${title}</h3><div class="avatar-options">${GUEST_PROFILES.filter(p=>p.category===group).map(p=>`<label class="avatar-option"><input type="radio" name="avatar" value="${p.id}" ${p.id===id?'checked':''}><img src="${portraitUrl(p.id)}" alt="" width="160" height="180"><span>${p.label}</span></label>`).join('')}</div></div>`).join('')}</fieldset>`;}

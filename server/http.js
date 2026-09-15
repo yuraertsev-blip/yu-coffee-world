@@ -12,7 +12,7 @@ export function createCafeServer({room=new CafeRoom(),origins=['http://127.0.0.1
    if(req.method!=='POST'||!['/api/join','/api/command'].includes(req.url))return reply(404,{error:'Not found'});
    if(!req.headers['content-type']?.startsWith('application/json'))return reply(415,{error:'JSON required'});
    let data='';for await(const chunk of req){data+=chunk;if(data.length>2048)return reply(413,{error:'Request too large'});}const a=JSON.parse(data||'{}');
-   if(req.url==='/api/join')return reply(200,room.join(a.name));room.command(token,a);return reply(200,room.poll(token));
+   if(req.url==='/api/join')return reply(200,room.join(a.name,a.avatar));room.command(token,a);return reply(200,room.poll(token));
   }catch(e){reply(e.message==='SESSION_EXPIRED'?401:400,{error:e instanceof SyntaxError?'Некорректный JSON.':e.message});}
  });
  const timer=setInterval(()=>{room.sweep();const now=Date.now();for(const [id,r] of rates)if(now-r.start>10000)rates.delete(id);},1000);timer.unref();server.on('close',()=>clearInterval(timer));return server;

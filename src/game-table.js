@@ -5,7 +5,7 @@ import {GAMES} from './games/registry.js';
 import {isTap} from './barista-interaction.js';
 export function installGameTable({scene,canvas,camera,world,keys,interaction,isWalking}){
  const boxes=[];
- for(const [tx,tz] of [[-.72,.85],[1.12,1.25]])GAMES.forEach((g,i)=>{
+ for(const [tx,tz] of [[-.72,.85]])GAMES.forEach((g,i)=>{
   const group=new T.Group();group.name='board-game-'+g.id;group.position.set(tx+(i===4?0:(i%2?1:-1)*.105),i===4?.783:.736,tz+(i===4?0:(i<2?-1:1)*.078));group.rotation.y=(i%2?-.06:.05);scene.add(group);
   const mat=new T.MeshStandardMaterial({color:g.color,roughness:.82});const box=new T.Mesh(new RoundedBoxGeometry(.19,.045,.137,3,.004),mat);group.add(box);
   const cover=document.createElement('canvas');cover.width=512;cover.height=384;const ctx=cover.getContext('2d');ctx.fillStyle=g.color;ctx.fillRect(0,0,512,384);ctx.strokeStyle='#fff0c5';ctx.lineWidth=5;ctx.strokeRect(18,18,476,348);ctx.fillStyle='#fff1d1';ctx.textAlign='center';ctx.font=g.id==='croissant'?'bold 43px Arial':'bold 62px Arial';ctx.fillText(g.name,256,108);ctx.font='100px Georgia';ctx.fillText(g.icon,256,239);ctx.font='22px Arial';ctx.fillText('Ю КОФЕ · ДАВАЙТЕ ИГРАТЬ',256,330);const texture=new T.CanvasTexture(cover);texture.colorSpace=T.SRGBColorSpace;
