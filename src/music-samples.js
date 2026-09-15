@@ -16,6 +16,18 @@ export const SAMPLE_BANKS = {
       ],
       [
         {
+          "file": "ukulele-64-c30b8542cf.wav",
+          "rootHz": 329.7136
+        }
+      ],
+      [
+        {
+          "file": "ukulele-64-c30b8542cf.wav",
+          "rootHz": 329.7136
+        }
+      ],
+      [
+        {
           "file": "ukulele-67-2fe32fa1af.wav",
           "rootHz": 393.4009
         }
@@ -30,6 +42,48 @@ export const SAMPLE_BANKS = {
         {
           "file": "ukulele-72-41dce749db.wav",
           "rootHz": 521.9394
+        }
+      ],
+      [
+        {
+          "file": "ukulele-72-41dce749db.wav",
+          "rootHz": 521.9394
+        }
+      ],
+      [
+        {
+          "file": "ukulele-72-41dce749db.wav",
+          "rootHz": 521.9394
+        }
+      ],
+      [
+        {
+          "file": "ukulele-76-b150bf16ab.wav",
+          "rootHz": 665.7001
+        }
+      ],
+      [
+        {
+          "file": "ukulele-76-b150bf16ab.wav",
+          "rootHz": 665.7001
+        }
+      ],
+      [
+        {
+          "file": "ukulele-76-b150bf16ab.wav",
+          "rootHz": 665.7001
+        }
+      ],
+      [
+        {
+          "file": "ukulele-76-b150bf16ab.wav",
+          "rootHz": 665.7001
+        }
+      ],
+      [
+        {
+          "file": "ukulele-76-b150bf16ab.wav",
+          "rootHz": 665.7001
         }
       ],
       [
@@ -113,6 +167,42 @@ export const SAMPLE_BANKS = {
           "file": "darbuka-4-2-2-f26d076829.wav",
           "layer": "hard"
         }
+      ],
+      [
+        {
+          "file": "darbuka-2-1-1-c45bedf74d.wav",
+          "layer": "soft"
+        },
+        {
+          "file": "darbuka-2-1-2-2be7a80028.wav",
+          "layer": "soft"
+        },
+        {
+          "file": "darbuka-2-2-1-3409cec065.wav",
+          "layer": "hard"
+        },
+        {
+          "file": "darbuka-2-2-2-9afb6bcb2f.wav",
+          "layer": "hard"
+        }
+      ],
+      [
+        {
+          "file": "darbuka-3-1-1-8e5277c275.wav",
+          "layer": "soft"
+        },
+        {
+          "file": "darbuka-3-1-2-ad2d8a380e.wav",
+          "layer": "soft"
+        },
+        {
+          "file": "darbuka-3-2-1-76ecb6df77.wav",
+          "layer": "hard"
+        },
+        {
+          "file": "darbuka-3-2-2-030660fe06.wav",
+          "layer": "hard"
+        }
       ]
     ]
   },
@@ -172,50 +262,92 @@ export const SAMPLE_BANKS = {
     "pads": [
       [
         {
-          "file": "handpan-0-1609f56a36.wav",
-          "rootHz": 151.3017
+          "file": "handpan-celtic-B2-f8a18fe6af.wav",
+          "rootHz": 122.596975
         }
       ],
       [
         {
-          "file": "handpan-1-1372288b8b.wav",
-          "rootHz": 229.6084
+          "file": "handpan-celtic-B2-f8a18fe6af.wav",
+          "rootHz": 122.596975
         }
       ],
       [
         {
-          "file": "handpan-2-77d0aa6f14.wav",
-          "rootHz": 260.8808
+          "file": "handpan-celtic-B2-f8a18fe6af.wav",
+          "rootHz": 122.596975
         }
       ],
       [
         {
-          "file": "handpan-3-69dadac040.wav",
-          "rootHz": 296.2325
+          "file": "handpan-celtic-Fs3-ab96cf5e75.wav",
+          "rootHz": 184.437995
         }
       ],
       [
         {
-          "file": "handpan-4-14a9a07af7.wav",
-          "rootHz": 350.7016
+          "file": "handpan-celtic-Fs3-ab96cf5e75.wav",
+          "rootHz": 184.437995
         }
       ],
       [
         {
-          "file": "handpan-5-7006b197b5.wav",
-          "rootHz": 397.8788
+          "file": "handpan-celtic-Fs3-ab96cf5e75.wav",
+          "rootHz": 184.437995
         }
       ],
       [
         {
-          "file": "handpan-6-0034217046.wav",
-          "rootHz": 445.5182
+          "file": "handpan-celtic-A3-b2540ce396.wav",
+          "rootHz": 220.297985
         }
       ],
       [
         {
-          "file": "handpan-7-a2b4c6e39e.wav",
-          "rootHz": 531.4366
+          "file": "handpan-celtic-B3-59a87d2c19.wav",
+          "rootHz": 247.54454
+        }
+      ],
+      [
+        {
+          "file": "handpan-celtic-Cs4-39cb8df378.wav",
+          "rootHz": 276.952519
+        }
+      ],
+      [
+        {
+          "file": "handpan-celtic-D4-8c95bfb100.wav",
+          "rootHz": 293.767726
+        }
+      ],
+      [
+        {
+          "file": "handpan-celtic-E4-a88e386484.wav",
+          "rootHz": 329.078588
+        }
+      ],
+      [
+        {
+          "file": "handpan-celtic-Fs4-c27cf60a3c.wav",
+          "rootHz": 369.395448
+        }
+      ],
+      [
+        {
+          "file": "handpan-celtic-Fs4-c27cf60a3c.wav",
+          "rootHz": 369.395448
+        }
+      ],
+      [
+        {
+          "file": "handpan-celtic-A4-980448cf80.wav",
+          "rootHz": 439.838547
+        }
+      ],
+      [
+        {
+          "file": "handpan-celtic-B4-2240c3fdaa.wav",
+          "rootHz": 493.709326
         }
       ]
     ]
@@ -230,6 +362,36 @@ export const SAMPLE_BANKS = {
         {
           "file": "bass-e2-2-e0c5a705c6.wav",
           "rootHz": 41.8239
+        }
+      ],
+      [
+        {
+          "file": "bass-e2-1-40f579ca7a.wav",
+          "rootHz": 41.8374
+        },
+        {
+          "file": "bass-e2-2-e0c5a705c6.wav",
+          "rootHz": 41.8239
+        }
+      ],
+      [
+        {
+          "file": "bass-a2-1-e7d15f1a7f.wav",
+          "rootHz": 54.8584
+        },
+        {
+          "file": "bass-a2-2-f0f5d61746.wav",
+          "rootHz": 54.8065
+        }
+      ],
+      [
+        {
+          "file": "bass-a2-1-e7d15f1a7f.wav",
+          "rootHz": 54.8584
+        },
+        {
+          "file": "bass-a2-2-f0f5d61746.wav",
+          "rootHz": 54.8065
         }
       ],
       [
@@ -254,12 +416,52 @@ export const SAMPLE_BANKS = {
       ],
       [
         {
+          "file": "bass-eb3-1-09d7b1c27a.wav",
+          "rootHz": 77.7599
+        },
+        {
+          "file": "bass-eb3-2-e005d89261.wav",
+          "rootHz": 77.754
+        }
+      ],
+      [
+        {
+          "file": "bass-eb3-1-09d7b1c27a.wav",
+          "rootHz": 77.7599
+        },
+        {
+          "file": "bass-eb3-2-e005d89261.wav",
+          "rootHz": 77.754
+        }
+      ],
+      [
+        {
           "file": "bass-gb3-1-8c0d70d3e0.wav",
           "rootHz": 92.0346
         },
         {
           "file": "bass-gb3-2-54c70afffb.wav",
           "rootHz": 92.0485
+        }
+      ],
+      [
+        {
+          "file": "bass-gb3-1-8c0d70d3e0.wav",
+          "rootHz": 92.0346
+        },
+        {
+          "file": "bass-gb3-2-54c70afffb.wav",
+          "rootHz": 92.0485
+        }
+      ],
+      [
+        {
+          "file": "bass-a3-1-751a1888f2.wav",
+          "rootHz": 109.5866
+        },
+        {
+          "file": "bass-a3-2-b36358ffff.wav",
+          "rootHz": 109.6494
         }
       ],
       [
@@ -281,11 +483,99 @@ export const SAMPLE_BANKS = {
           "file": "bass-eb4-2-e6c69a3481.wav",
           "rootHz": 155.708
         }
+      ],
+      [
+        {
+          "file": "bass-eb4-1-a69b359898.wav",
+          "rootHz": 155.732
+        },
+        {
+          "file": "bass-eb4-2-e6c69a3481.wav",
+          "rootHz": 155.708
+        }
+      ],
+      [
+        {
+          "file": "bass-eb4-1-a69b359898.wav",
+          "rootHz": 155.732
+        },
+        {
+          "file": "bass-eb4-2-e6c69a3481.wav",
+          "rootHz": 155.708
+        }
       ]
     ]
   },
   "didgeridoo": {
     "pads": [
+      [
+        {
+          "file": "didgeridoo-2-dc5b7a816b.wav",
+          "rootHz": 69.3784,
+          "variant": 0
+        },
+        {
+          "file": "didgeridoo-3-e19e03db68.wav",
+          "rootHz": 69.4787,
+          "variant": 1
+        },
+        {
+          "file": "didgeridoo-8-feed1b5247.wav",
+          "rootHz": 71.4337,
+          "variant": 2
+        }
+      ],
+      [
+        {
+          "file": "didgeridoo-2-dc5b7a816b.wav",
+          "rootHz": 69.3784,
+          "variant": 0
+        },
+        {
+          "file": "didgeridoo-3-e19e03db68.wav",
+          "rootHz": 69.4787,
+          "variant": 1
+        },
+        {
+          "file": "didgeridoo-8-feed1b5247.wav",
+          "rootHz": 71.4337,
+          "variant": 2
+        }
+      ],
+      [
+        {
+          "file": "didgeridoo-2-dc5b7a816b.wav",
+          "rootHz": 69.3784,
+          "variant": 0
+        },
+        {
+          "file": "didgeridoo-3-e19e03db68.wav",
+          "rootHz": 69.4787,
+          "variant": 1
+        },
+        {
+          "file": "didgeridoo-8-feed1b5247.wav",
+          "rootHz": 71.4337,
+          "variant": 2
+        }
+      ],
+      [
+        {
+          "file": "didgeridoo-2-dc5b7a816b.wav",
+          "rootHz": 69.3784,
+          "variant": 0
+        },
+        {
+          "file": "didgeridoo-3-e19e03db68.wav",
+          "rootHz": 69.4787,
+          "variant": 1
+        },
+        {
+          "file": "didgeridoo-8-feed1b5247.wav",
+          "rootHz": 71.4337,
+          "variant": 2
+        }
+      ],
       [
         {
           "file": "didgeridoo-2-dc5b7a816b.wav",

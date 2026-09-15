@@ -1,4 +1,5 @@
 import {assetUrl} from './asset-url.js';
+import {UKULELE_CHORDS} from './music-instruments.js';
 import {SAMPLE_BANKS} from './music-samples.js';
 export {INSTRUMENTS,getMusicPreset} from './music-instruments.js';
 
@@ -52,6 +53,23 @@ export function createMusicAudio({fetchAudio=globalThis.fetch?.bind(globalThis),
  }
  function play(inst,index,settings,velocity=.8){
   if(!ctx||ctx.state!=='running')return ()=>{};
+  const start=ctx.currentTime+.006;
+  if(inst.id==='ukulele'&&settings.mode==='chords'){
+   const chord=UKULELE_CHORDS[index];if(!chord)throw Error('Неизвестный аккорд.');
+   const releases=chord.notes.map((hz,i)=>{
+    const pad=SAMPLE_BANKS.ukulele.pads.reduce((best,p,j,all)=>Math.abs(Math.log2(p[0].rootHz/hz))<Math.abs(Math.log2(all[best][0].rootHz/hz))?j:best,0);
+    return playNote(inst,pad,settings,velocity*.52,start+i*.018,hz,(i-1.5)*.07);
+   });return ()=>releases.forEach(release=>release());
+  }
+  if(inst.id==='darbuka'&&index>=4&&index<=5){
+   const count=index===4?4:8;
+   const releases=Array.from({length:count},(_,i)=>playNote(inst,1+i%2,settings,velocity*(i===count-1?.8:i===0?.64:.48),start+i*.038));
+   return ()=>releases.forEach(release=>release());
+  }
+  return playNote(inst,index,settings,velocity,start);
+ }
+ function playNote(inst,index,settings,velocity=.8,at=ctx?.currentTime,targetHz=inst.notes[index],panPosition){
+  if(!ctx||ctx.state!=='running')return ()=>{};
   const bank=SAMPLE_BANKS[inst.id],candidates=bank?.pads[index];if(!candidates)throw Error('Неизвестная нота.');
   let choices=candidates;
   if(inst.type==='drone')choices=candidates.filter(s=>s.variant===(settings.voice??0));
@@ -61,13 +79,13 @@ export function createMusicAudio({fetchAudio=globalThis.fetch?.bind(globalThis),
   const sample=choices[turn%choices.length],buffer=buffers.get(sample.file);if(!buffer)throw Error('Записи ещё загружаются.');
   while(voices.size>=32)voices.values().next().value.release(true);
   update(settings);
-  const t=ctx.currentTime,source=ctx.createBufferSource(),envelope=ctx.createGain(),pan=ctx.createStereoPanner();source.buffer=buffer;
-  const pitched=['pluck','bass','metal','drone'].includes(inst.type),baseRate=(pitched?inst.notes[index]/sample.rootHz:1)*(sample.rate||1),rate=baseRate*2**(settings.tune/12);
+  const t=at,source=ctx.createBufferSource(),envelope=ctx.createGain(),pan=ctx.createStereoPanner();source.buffer=buffer;
+  const pitched=['pluck','bass','metal','drone'].includes(inst.type),baseRate=(pitched?targetHz/sample.rootHz:1)*(sample.rate||1),rate=baseRate*2**(settings.tune/12);
   source.playbackRate.setValueAtTime(rate,t);source.loop=inst.type==='drone';
   if(source.loop){source.loopStart=0;source.loopEnd=buffer.duration;}
   const human=[1,.975,1.012,.99][turn%4],level=Math.max(.08,Math.min(1,velocity))*.78*human*(sample.gain||1);
   envelope.gain.setValueAtTime(0,t);envelope.gain.linearRampToValueAtTime(level,t+(source.loop?.035:.002));
-  pan.pan.value=inst.type==='kit'?[0,-.1,-.3,.28,.2,-.18][index]:inst.type==='drone'?0:(index-(inst.notes.length-1)/2)*.035;
+  pan.pan.value=panPosition??(inst.type==='kit'?[0,-.1,-.3,.28,.2,-.18][index]:inst.type==='drone'?0:(index-(inst.notes.length-1)/2)*.035);
   source.connect(envelope);envelope.connect(pan);pan.connect(tone);
   let released=false;
   const voice={release(immediate=false){
