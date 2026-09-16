@@ -882,6 +882,26 @@
       "rootHz": 362.655087,
       "loopStart": 0.25,
       "loopEnd": 1.918367
+    },
+    {
+      "file": "kit-ride-1-d12d6ee02c.wav",
+      "source": "https://github.com/sfzinstruments/virtuosity_drums/blob/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/oh/ride/oh_ride_ride_vl3_rr1.flac",
+      "download": "https://raw.githubusercontent.com/sfzinstruments/virtuosity_drums/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/oh/ride/oh_ride_ride_vl3_rr1.flac",
+      "author": "Versilian Studios / Karoryfer Samples / Austin McMahon",
+      "license": "CC0-1.0",
+      "sha256": "d12d6ee02ca91bce55ccb10aa9553acfd683691b8484d1f8d181b93138e647bc",
+      "duration": 4.51821,
+      "changes": "Trimmed silence; DC removal; peak normalization; boundary fades; mono PCM 44.1 kHz / 16 bit."
+    },
+    {
+      "file": "kit-ride-2-f0bfc7b65a.wav",
+      "source": "https://github.com/sfzinstruments/virtuosity_drums/blob/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/oh/ride/oh_ride_ride_vl3_rr2.flac",
+      "download": "https://raw.githubusercontent.com/sfzinstruments/virtuosity_drums/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/oh/ride/oh_ride_ride_vl3_rr2.flac",
+      "author": "Versilian Studios / Karoryfer Samples / Austin McMahon",
+      "license": "CC0-1.0",
+      "sha256": "f0bfc7b65a3a56f3a566faacb5c2a26445a6a12613055402784044c915e56458",
+      "duration": 3.41773,
+      "changes": "Trimmed silence; DC removal; peak normalization; boundary fades; mono PCM 44.1 kHz / 16 bit."
     }
   ]
 }

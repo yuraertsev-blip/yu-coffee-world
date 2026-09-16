@@ -87,16 +87,16 @@ export function createMusicAudio({fetchAudio=globalThis.fetch?.bind(globalThis),
   const key=inst.id+':'+index+':'+(choices[0].layer||settings.voice||0),turn=roundRobin.get(key)||0;roundRobin.set(key,turn+1);
   const sample=choices[turn%choices.length],buffer=buffers.get(sample.file);if(!buffer)throw Error('Записи ещё загружаются.');
   const chokeGroup=inst.id==='kit'&&[2,7].includes(index)?'kit:hat':null;
-  for(const voice of [...voices])if((chokeGroup&&voice.chokeGroup===chokeGroup)||(inst.type==='wind'&&voice.instrument==='duduk'))voice.release(true);
+  for(const voice of [...voices])if((chokeGroup&&voice.chokeGroup===chokeGroup))voice.release(true);
   while(voices.size>=32)voices.values().next().value.release(true);
   update(settings);
   const t=at,source=ctx.createBufferSource(),envelope=ctx.createGain(),pan=ctx.createStereoPanner();source.buffer=buffer;
-  const pitched=['pluck','bass','metal','drone','wind'].includes(inst.type),baseRate=(pitched?targetHz/sample.rootHz:1)*(sample.rate||1),rate=baseRate*2**(settings.tune/12);
+  const pitched=['pluck','bass','metal','drone','wind'].includes(inst.type);let baseRate=(pitched?targetHz/sample.rootHz:1)*(sample.rate||1);const rate=baseRate*2**(settings.tune/12);
   source.playbackRate.setValueAtTime(rate,t);source.loop=isSustained(inst);
   if(source.loop){source.loopStart=sample.loopStart??0;source.loopEnd=sample.loopEnd??buffer.duration;}
   const human=[1,.975,1.012,.99][turn%4],level=Math.max(.08,Math.min(1,velocity))*.78*human*(sample.gain||1);
   envelope.gain.setValueAtTime(0,t);envelope.gain.linearRampToValueAtTime(level,t+(inst.type==='wind'?.06:source.loop?.035:.002));
-  pan.pan.value=panPosition??(inst.type==='kit'?[0,-.1,-.45,-.25,.12,-.12,.38,-.45,.45,.15][index]:isSustained(inst)?0:(index-(inst.notes.length-1)/2)*.035);
+  pan.pan.value=panPosition??(inst.type==='kit'?[0,-.1,-.45,-.25,.12,-.12,.38,-.45,.45,.15,.4][index]:isSustained(inst)?0:(index-(inst.notes.length-1)/2)*.035);
   source.connect(envelope);envelope.connect(pan);pan.connect(tone);
   let released=false;
   const voice={instrument:inst.id,chokeGroup,release(immediate=false){
@@ -108,7 +108,15 @@ export function createMusicAudio({fetchAudio=globalThis.fetch?.bind(globalThis),
   source.onended=()=>{voices.delete(voice);source.disconnect();envelope.disconnect();pan.disconnect();};voices.add(voice);source.start(t);
   if(source.loop)voice.retune=tune=>source.playbackRate.setTargetAtTime(baseRate*2**(tune/12),ctx.currentTime,.05);
   else {const duration=buffer.duration/rate*(.22+.78*settings.decay);envelope.gain.setValueAtTime(level,t+Math.max(.003,duration-.09));envelope.gain.linearRampToValueAtTime(0,t+duration);source.stop(t+duration+.01);}
-  return ()=>voice.release();
+  const release=()=>voice.release();
+  if(source.loop)release.glide=nextIndex=>{
+   if(released||!Number.isFinite(inst.notes[nextIndex]))return;
+   baseRate=inst.notes[nextIndex]/sample.rootHz*(sample.rate||1);
+   const now=ctx.currentTime,param=source.playbackRate;
+   if(param.cancelAndHoldAtTime)param.cancelAndHoldAtTime(now);else param.cancelScheduledValues(now);
+   param.setTargetAtTime(baseRate*2**(settings.tune/12),now,.055);
+  };
+  return release;
  }
  return {ready,play,stop,update,isReady:inst=>!!SAMPLE_BANKS[inst.id]?.pads.flat().every(s=>buffers.has(s.file))};
 }

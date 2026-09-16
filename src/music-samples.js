@@ -286,6 +286,14 @@ export const SAMPLE_BANKS = {
         {
           "file": "kit-cowbell-2-ffec70c55b.wav"
         }
+      ],
+      [
+        {
+          "file": "kit-ride-1-d12d6ee02c.wav"
+        },
+        {
+          "file": "kit-ride-2-f0bfc7b65a.wav"
+        }
       ]
     ]
   },

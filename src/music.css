@@ -15,3 +15,4 @@
 .music-pads.kit-layout .music-pad.cymbal{background:radial-gradient(circle at 45% 40%,#fff0b3 0%,#b79245 15%,#e6c97e 20%,#c4a057 58%,#f2d994 64%,#b8964d 72%);border-color:#d6bc75;color:#493c21}
 .music-pads.handpan-layout .music-pad:hover,.music-pads.handpan-layout .music-pad.playing,.music-pads.kit-layout .music-pad:hover,.music-pads.kit-layout .music-pad.playing{transform:translate(-50%,-50%) scale(.96);filter:brightness(1.2);box-shadow:0 0 18px #f5d38380}
 @media(max-width:600px){.music-pads.handpan-layout,.music-pads.kit-layout{padding:0;gap:0}.music-pads.handpan-layout .music-pad,.music-pads.kit-layout .music-pad{min-height:0;padding:2px;gap:2px}.music-pads.kit-layout{border-radius:18px}}
+.music-pads{touch-action:none;user-select:none;-webkit-user-select:none}.music-pad.held{filter:brightness(1.2);box-shadow:0 0 18px #f5d38380}.music-pad{ -webkit-touch-callout:none }
