@@ -255,6 +255,37 @@ export const SAMPLE_BANKS = {
         {
           "file": "kit-hightom-2-eba6eff029.wav"
         }
+      ],
+      [
+        {
+          "file": "kit-lowtom-1-bfb8d3c5bf.wav",
+          "rate": 0.7
+        },
+        {
+          "file": "kit-lowtom-2-cd40e42878.wav",
+          "rate": 0.7
+        }
+      ],
+      [
+        {
+          "file": "kit-openhat-1-376e8e4a1d.wav"
+        },
+        {
+          "file": "kit-openhat-2-85dd71fba7.wav"
+        }
+      ],
+      [
+        {
+          "file": "kit-china-8b25c7444d.wav"
+        }
+      ],
+      [
+        {
+          "file": "kit-cowbell-1-1ea1597787.wav"
+        },
+        {
+          "file": "kit-cowbell-2-ffec70c55b.wav"
+        }
       ]
     ]
   },
@@ -694,6 +725,164 @@ export const SAMPLE_BANKS = {
         {
           "file": "frame-HitMuted-3-2-ed52b263f8.wav",
           "layer": "hard"
+        }
+      ],
+      [
+        {
+          "file": "frame-fingertip-84a420ef0c.wav"
+        }
+      ],
+      [
+        {
+          "file": "frame-dry-1-ac491e958f.wav"
+        },
+        {
+          "file": "frame-dry-2-50ef476a49.wav"
+        }
+      ],
+      [
+        {
+          "file": "frame-Hit-2-1-601b635225.wav",
+          "layer": "soft"
+        },
+        {
+          "file": "frame-Hit-2-2-b260ca840c.wav",
+          "layer": "soft"
+        },
+        {
+          "file": "frame-Hit-3-1-b31a432b54.wav",
+          "layer": "hard"
+        },
+        {
+          "file": "frame-Hit-3-2-4293c50bb4.wav",
+          "layer": "hard"
+        }
+      ],
+      [
+        {
+          "file": "frame-hand-e1fd745d9d.wav"
+        }
+      ],
+      [
+        {
+          "file": "frame-hand-e1fd745d9d.wav",
+          "rate": 1.18,
+          "gain": 0.65
+        }
+      ],
+      [
+        {
+          "file": "frame-hand-e1fd745d9d.wav",
+          "rate": 1.18,
+          "gain": 0.65
+        }
+      ]
+    ]
+  },
+  "duduk": {
+    "pads": [
+      [
+        {
+          "file": "duduk-low-7b26dba19d.wav",
+          "rootHz": 267.035945,
+          "loopStart": 0.25,
+          "loopEnd": 2.118141
+        }
+      ],
+      [
+        {
+          "file": "duduk-low-7b26dba19d.wav",
+          "rootHz": 267.035945,
+          "loopStart": 0.25,
+          "loopEnd": 2.118141
+        }
+      ],
+      [
+        {
+          "file": "duduk-low-7b26dba19d.wav",
+          "rootHz": 267.035945,
+          "loopStart": 0.25,
+          "loopEnd": 2.118141
+        }
+      ],
+      [
+        {
+          "file": "duduk-low-7b26dba19d.wav",
+          "rootHz": 267.035945,
+          "loopStart": 0.25,
+          "loopEnd": 2.118141
+        }
+      ],
+      [
+        {
+          "file": "duduk-low-7b26dba19d.wav",
+          "rootHz": 267.035945,
+          "loopStart": 0.25,
+          "loopEnd": 2.118141
+        }
+      ],
+      [
+        {
+          "file": "duduk-mid-a694d6a245.wav",
+          "rootHz": 316.356362,
+          "loopStart": 0.25,
+          "loopEnd": 2.319592
+        }
+      ],
+      [
+        {
+          "file": "duduk-mid-a694d6a245.wav",
+          "rootHz": 316.356362,
+          "loopStart": 0.25,
+          "loopEnd": 2.319592
+        }
+      ],
+      [
+        {
+          "file": "duduk-mid-a694d6a245.wav",
+          "rootHz": 316.356362,
+          "loopStart": 0.25,
+          "loopEnd": 2.319592
+        }
+      ],
+      [
+        {
+          "file": "duduk-high-bb5114ca47.wav",
+          "rootHz": 362.655087,
+          "loopStart": 0.25,
+          "loopEnd": 1.918367
+        }
+      ],
+      [
+        {
+          "file": "duduk-high-bb5114ca47.wav",
+          "rootHz": 362.655087,
+          "loopStart": 0.25,
+          "loopEnd": 1.918367
+        }
+      ],
+      [
+        {
+          "file": "duduk-high-bb5114ca47.wav",
+          "rootHz": 362.655087,
+          "loopStart": 0.25,
+          "loopEnd": 1.918367
+        }
+      ],
+      [
+        {
+          "file": "duduk-high-bb5114ca47.wav",
+          "rootHz": 362.655087,
+          "loopStart": 0.25,
+          "loopEnd": 1.918367
+        }
+      ],
+      [
+        {
+          "file": "duduk-high-bb5114ca47.wav",
+          "rootHz": 362.655087,
+          "loopStart": 0.25,
+          "loopEnd": 1.918367
         }
       ]
     ]

@@ -1,4 +1,5 @@
 import {assetUrl} from './asset-url.js';
+import {isSustained} from './music-layouts.js';
 import {UKULELE_CHORDS} from './music-instruments.js';
 import {SAMPLE_BANKS} from './music-samples.js';
 export {INSTRUMENTS,getMusicPreset} from './music-instruments.js';
@@ -66,6 +67,14 @@ export function createMusicAudio({fetchAudio=globalThis.fetch?.bind(globalThis),
    const releases=Array.from({length:count},(_,i)=>playNote(inst,1+i%2,settings,velocity*(i===count-1?.8:i===0?.64:.48),start+i*.038));
    return ()=>releases.forEach(release=>release());
   }
+  if(inst.id==='frame'&&index>=6&&index<=9){
+   const count=index===8?4:index===9?8:2,interval=index===6?.085:index===7?.026:.046;
+   const releases=Array.from({length:count},(_,i)=>{
+    const pad=index===6?0:index===7?(i===0?2:1):(i%2?4:2);
+    const accent=index===7?(i===0?.32:1):index===6?(i===0?1:.78):(i===count-1?.78:.5);
+    return playNote(inst,pad,settings,velocity*accent,start+i*interval);
+   });return ()=>releases.forEach(release=>release());
+  }
   return playNote(inst,index,settings,velocity,start);
  }
  function playNote(inst,index,settings,velocity=.8,at=ctx?.currentTime,targetHz=inst.notes[index],panPosition){
@@ -77,20 +86,22 @@ export function createMusicAudio({fetchAudio=globalThis.fetch?.bind(globalThis),
   if(!choices.length)choices=candidates;
   const key=inst.id+':'+index+':'+(choices[0].layer||settings.voice||0),turn=roundRobin.get(key)||0;roundRobin.set(key,turn+1);
   const sample=choices[turn%choices.length],buffer=buffers.get(sample.file);if(!buffer)throw Error('Записи ещё загружаются.');
+  const chokeGroup=inst.id==='kit'&&[2,7].includes(index)?'kit:hat':null;
+  for(const voice of [...voices])if((chokeGroup&&voice.chokeGroup===chokeGroup)||(inst.type==='wind'&&voice.instrument==='duduk'))voice.release(true);
   while(voices.size>=32)voices.values().next().value.release(true);
   update(settings);
   const t=at,source=ctx.createBufferSource(),envelope=ctx.createGain(),pan=ctx.createStereoPanner();source.buffer=buffer;
-  const pitched=['pluck','bass','metal','drone'].includes(inst.type),baseRate=(pitched?targetHz/sample.rootHz:1)*(sample.rate||1),rate=baseRate*2**(settings.tune/12);
-  source.playbackRate.setValueAtTime(rate,t);source.loop=inst.type==='drone';
-  if(source.loop){source.loopStart=0;source.loopEnd=buffer.duration;}
+  const pitched=['pluck','bass','metal','drone','wind'].includes(inst.type),baseRate=(pitched?targetHz/sample.rootHz:1)*(sample.rate||1),rate=baseRate*2**(settings.tune/12);
+  source.playbackRate.setValueAtTime(rate,t);source.loop=isSustained(inst);
+  if(source.loop){source.loopStart=sample.loopStart??0;source.loopEnd=sample.loopEnd??buffer.duration;}
   const human=[1,.975,1.012,.99][turn%4],level=Math.max(.08,Math.min(1,velocity))*.78*human*(sample.gain||1);
-  envelope.gain.setValueAtTime(0,t);envelope.gain.linearRampToValueAtTime(level,t+(source.loop?.035:.002));
-  pan.pan.value=panPosition??(inst.type==='kit'?[0,-.1,-.3,.28,.2,-.18][index]:inst.type==='drone'?0:(index-(inst.notes.length-1)/2)*.035);
+  envelope.gain.setValueAtTime(0,t);envelope.gain.linearRampToValueAtTime(level,t+(inst.type==='wind'?.06:source.loop?.035:.002));
+  pan.pan.value=panPosition??(inst.type==='kit'?[0,-.1,-.45,-.25,.12,-.12,.38,-.45,.45,.15][index]:isSustained(inst)?0:(index-(inst.notes.length-1)/2)*.035);
   source.connect(envelope);envelope.connect(pan);pan.connect(tone);
   let released=false;
-  const voice={release(immediate=false){
+  const voice={instrument:inst.id,chokeGroup,release(immediate=false){
    if(released)return;released=true;voices.delete(voice);
-   const now=ctx.currentTime,tail=immediate?.025:source.loop?.05+settings.decay*.55:.06;
+   const now=ctx.currentTime,tail=immediate?.025:inst.type==='wind'?.09+settings.decay*.22:source.loop?.05+settings.decay*.55:.06;
    if(envelope.gain.cancelAndHoldAtTime)envelope.gain.cancelAndHoldAtTime(now);else{envelope.gain.cancelScheduledValues(now);envelope.gain.setValueAtTime(level,now);}
    envelope.gain.linearRampToValueAtTime(0,now+tail);source.stop(now+tail+.005);
   }};

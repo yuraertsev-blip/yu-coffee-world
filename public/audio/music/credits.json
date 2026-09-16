@@ -763,6 +763,125 @@
       "sha256": "2240c3fdaa1d7e41ee2580f4924b6e91fb4d8f975e2b8e5caabd20cb801bdc08",
       "duration": 3.63229,
       "changes": "Mono downmix; measured fundamental; removed DC/rumble and attenuated unrelated resonances while preserving acoustic attack and harmonic decay; peak normalization; boundary fades; 44.1 kHz / 16-bit PCM. Pitch correction is applied by sampler."
+    },
+    {
+      "file": "kit-openhat-1-376e8e4a1d.wav",
+      "download": "https://raw.githubusercontent.com/sfzinstruments/virtuosity_drums/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/oh/hh/oh_hh_open_vl3_rr1.flac",
+      "source": "https://github.com/sfzinstruments/virtuosity_drums/blob/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/oh/hh/oh_hh_open_vl3_rr1.flac",
+      "author": "Versilian Studios / Karoryfer Samples / Austin McMahon",
+      "license": "CC0-1.0",
+      "changes": "Trimmed silence; DC removal; normalized peaks; boundary fades; mono PCM 44.1 kHz / 16 bit.",
+      "sha256": "376e8e4a1d28d43be440cb4a018d7afdcfc4eaa036c7f521c990efc2e3e2ce39",
+      "duration": 4.39011
+    },
+    {
+      "file": "kit-cowbell-1-1ea1597787.wav",
+      "download": "https://raw.githubusercontent.com/sfzinstruments/virtuosity_drums/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/perc/close/cowbell/Cowbell1_Normal_v2_rr1_Close.wav",
+      "source": "https://github.com/sfzinstruments/virtuosity_drums/blob/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/perc/close/cowbell/Cowbell1_Normal_v2_rr1_Close.wav",
+      "author": "Versilian Studios / Karoryfer Samples / Austin McMahon",
+      "license": "CC0-1.0",
+      "changes": "Trimmed silence; DC removal; normalized peaks; boundary fades; mono PCM 44.1 kHz / 16 bit.",
+      "sha256": "1ea1597787831e642c743c406351ea7c1a5704d0f20cd89682288627b2745e3f",
+      "duration": 0.40331
+    },
+    {
+      "file": "frame-dry-1-ac491e958f.wav",
+      "download": "https://raw.githubusercontent.com/sgossner/VCSL/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Membranophones/Struck%20Membranophones/Frame%20Drum/HDrumS_HitMuted_v2_rr1_Sum.wav",
+      "source": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Membranophones/Struck%20Membranophones/Frame%20Drum/HDrumS_HitMuted_v2_rr1_Sum.wav",
+      "author": "Versilian Studios",
+      "license": "CC0-1.0",
+      "changes": "Trimmed silence; DC removal; normalized peaks; boundary fades; mono PCM 44.1 kHz / 16 bit.",
+      "sha256": "ac491e958f3a9b272868e8a51c86db79629c71064526467a6803b2bb51a878af",
+      "duration": 0.89322
+    },
+    {
+      "file": "kit-openhat-2-85dd71fba7.wav",
+      "download": "https://raw.githubusercontent.com/sfzinstruments/virtuosity_drums/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/oh/hh/oh_hh_open_vl3_rr2.flac",
+      "source": "https://github.com/sfzinstruments/virtuosity_drums/blob/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/oh/hh/oh_hh_open_vl3_rr2.flac",
+      "author": "Versilian Studios / Karoryfer Samples / Austin McMahon",
+      "license": "CC0-1.0",
+      "changes": "Trimmed silence; DC removal; normalized peaks; boundary fades; mono PCM 44.1 kHz / 16 bit.",
+      "sha256": "85dd71fba7421981ec74a42c1d3b5c7eee8b5959126cb8dd765a25008d545e74",
+      "duration": 5.0
+    },
+    {
+      "file": "kit-cowbell-2-ffec70c55b.wav",
+      "download": "https://raw.githubusercontent.com/sfzinstruments/virtuosity_drums/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/perc/close/cowbell/Cowbell1_Normal_v2_rr2_Close.wav",
+      "source": "https://github.com/sfzinstruments/virtuosity_drums/blob/9f04cf9a734527edfbb0a4eee1f674e45bbf71bc/Samples/perc/close/cowbell/Cowbell1_Normal_v2_rr2_Close.wav",
+      "author": "Versilian Studios / Karoryfer Samples / Austin McMahon",
+      "license": "CC0-1.0",
+      "changes": "Trimmed silence; DC removal; normalized peaks; boundary fades; mono PCM 44.1 kHz / 16 bit.",
+      "sha256": "ffec70c55ba34422935908891d17b2328383f4209ff69755fed5d8303239ad1a",
+      "duration": 0.36118
+    },
+    {
+      "file": "frame-dry-2-50ef476a49.wav",
+      "download": "https://raw.githubusercontent.com/sgossner/VCSL/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Membranophones/Struck%20Membranophones/Frame%20Drum/HDrumS_HitMuted_v2_rr2_Sum.wav",
+      "source": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Membranophones/Struck%20Membranophones/Frame%20Drum/HDrumS_HitMuted_v2_rr2_Sum.wav",
+      "author": "Versilian Studios",
+      "license": "CC0-1.0",
+      "changes": "Trimmed silence; DC removal; normalized peaks; boundary fades; mono PCM 44.1 kHz / 16 bit.",
+      "sha256": "50ef476a499be975178e11eb8f5ec9cefd4adddbbde2174b78478b580e6828e7",
+      "duration": 0.82975
+    },
+    {
+      "file": "frame-fingertip-84a420ef0c.wav",
+      "download": "https://raw.githubusercontent.com/sgossner/VCSL/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Membranophones/Struck%20Membranophones/Frame%20Drum/HDrumS_Hand_v1_rr1_Sum.wav",
+      "source": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Membranophones/Struck%20Membranophones/Frame%20Drum/HDrumS_Hand_v1_rr1_Sum.wav",
+      "author": "Versilian Studios",
+      "license": "CC0-1.0",
+      "changes": "Trimmed silence; DC removal; normalized peaks; boundary fades; mono PCM 44.1 kHz / 16 bit.",
+      "sha256": "84a420ef0c0571dd793b8ef6e1ace94c73f4975d8d2e4fc3659a22b245d165f9",
+      "duration": 0.76898
+    },
+    {
+      "file": "kit-china-8b25c7444d.wav",
+      "download": "https://cdn.freesound.org/previews/696/696255_2253220-hq.mp3",
+      "source": "https://freesound.org/people/ankealtd/sounds/696255/",
+      "author": "ankealtd",
+      "license": "CC0-1.0",
+      "changes": "Trimmed silence; DC removal; normalized peaks; boundary fades; mono PCM 44.1 kHz / 16 bit.",
+      "sha256": "8b25c7444dc7bda10e5de42ac556ac683316d0bbdad9a2db20ddd58b6ba9f9d5",
+      "duration": 4.13313
+    },
+    {
+      "file": "duduk-low-7b26dba19d.wav",
+      "source": "https://freesound.org/people/ethnictune/sounds/352572/",
+      "download": "https://cdn.freesound.org/previews/352/352572_6510257-hq.mp3",
+      "author": "ethnictune",
+      "license": "CC0-1.0",
+      "changes": "Isolated sustained duduk tone 37.7–39.9s; high-pass removal of background rumble; measured median fundamental; 120 ms crossfade at sustain loop; normalized; 44.1 kHz mono PCM. Natural breath and vibrato retained.",
+      "sha256": "7b26dba19de74fc8ce3baf710b34d33ff6983450fb0a9ef7f075010fca6801fe",
+      "duration": 2.2,
+      "rootHz": 267.035945,
+      "loopStart": 0.25,
+      "loopEnd": 2.118141
+    },
+    {
+      "file": "duduk-mid-a694d6a245.wav",
+      "source": "https://freesound.org/people/ethnictune/sounds/352572/",
+      "download": "https://cdn.freesound.org/previews/352/352572_6510257-hq.mp3",
+      "author": "ethnictune",
+      "license": "CC0-1.0",
+      "changes": "Isolated sustained duduk tone 7.0–9.4s; high-pass removal of background rumble; measured median fundamental; 120 ms crossfade at sustain loop; normalized; 44.1 kHz mono PCM. Natural breath and vibrato retained.",
+      "sha256": "a694d6a245596bafe3b75dba36a399d436d7815e082fe1a6b608b7c87be2fc55",
+      "duration": 2.4,
+      "rootHz": 316.356362,
+      "loopStart": 0.25,
+      "loopEnd": 2.319592
+    },
+    {
+      "file": "duduk-high-bb5114ca47.wav",
+      "source": "https://freesound.org/people/ethnictune/sounds/352572/",
+      "download": "https://cdn.freesound.org/previews/352/352572_6510257-hq.mp3",
+      "author": "ethnictune",
+      "license": "CC0-1.0",
+      "changes": "Isolated sustained duduk tone 64–66s; high-pass removal of background rumble; measured median fundamental; 120 ms crossfade at sustain loop; normalized; 44.1 kHz mono PCM. Natural breath and vibrato retained.",
+      "sha256": "bb5114ca47c08dec86ede528ac98cb88a22064fde5918aa55e3a6ca640905e4a",
+      "duration": 2.0,
+      "rootHz": 362.655087,
+      "loopStart": 0.25,
+      "loopEnd": 1.918367
     }
   ]
 }
